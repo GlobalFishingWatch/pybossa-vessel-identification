@@ -37,7 +37,7 @@ redis-server contrib/sentinel.conf --sentinel
 sudo su postgres
 createuser -d -P pybossa
 ```
-when promted, enter "tester" as the password, and then retype
+when promted, enter "tester" as the password.
 ```bash
 createdb pybossa -O pybossa
 exit
