@@ -43,3 +43,10 @@ then
     $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> update_project
 ```
 
+Because I didn’t know where to put a stylesheet on the pybossa server, I uploaded it to google cloud:
+
+```bash
+gsutil cp idtracks_pbossa.css  gs://gfw-crowd/task_assets/idtracks_pbossa.css
+gsutil acl set public-read gs://gfw-crowd/task_assets/idtracks_pbossa.css
+```
+Now it is available and public at http://storage.googleapis.com/gfw-crowd/task_assets/idtracks_pbossa.css  
