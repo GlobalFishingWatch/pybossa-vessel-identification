@@ -47,6 +47,7 @@ exit
 pip install Flask-Misaka 
 ```
 Now the following two commands with get everything running. I ran "nohup" so that I could disconnect and have PyBossa still running. See [Deploying PyBossa with nginx and uwsgi](http://docs.pybossa.com/en/latest/nginx.html#deploying-pybossa-with-nginx-and-uwsgi) for how to really set up the server.
+```bash
 python cli.py db_create
 nohup python run.py &
-
+```
