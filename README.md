@@ -1,154 +1,52 @@
-# Vessel Identifcation
+# Pybossa Vessel Identifcation
 
+The goal of this project is to categorize vessels based on their tracks and information from Marine Traffic. This was originally made by modifying the [PyBossa FlickrPerson Example App] (https://github.com/PyBossa/app-flickrperson)
 
-The goal of this project is to categorize vessels based on their tracks
+To see how to install PyBossa, see installation.md
 
-The project has five main files:
+The vessel identification project has six main files:
 
 * **project.json**: a JSON file that describes the project.
 * **long_description.md**: a Markdown file with a long description of the
   project.
-* **template.html**: the task presenter where the user/volunteer will do the image
-  pattern recognition.
-* **tutorial.html**: a simple tutorial that explains how to do the image pattern
-  recognition.
+* **template.html**: the task presenter where the user/volunteer will identify vessel tracks
+* **tutorial.html**: a simple tutorial that explains how to identify vessels
+* **idtracks_pbossa.css**: css for the the template (mostly helps the layout of the d3 charts)
 
-
-# Testing the project
-
-You need to install the pybossa-pbs. If you don't have a virtual environment,
-we recommend you to create one, and activate it:
-
-```bash
-    $ virtualenv env
-    $ source env/bin/activate
-```
-
-Then, you can install pybossa-pbs:
+# Updating the project
+All of the files above, except idtracks_pbossa.css can be updated using pybossa-pbs
 
 ```bash
     $ pip install pybossa-pbs
 ```
 
-Or if you prefer:
+To create the project, enter, while in this directory:
 
 ```bash
-    $ pip install -r requirements.txt
+    $ pbs --server <<url of the pybossa instance>> --api-key <<your api key>>  create_project
 ```
+The information about the task has to be in the project.json file
 
-**NOTE**: Use this template with a PyBossa server version >=1.0.0.
+Then you can upload some tasks. These are in the format of a csv file, and they have to have a column for:
+* mmsi
+* month (1-12)
+* year
 
-## Creating an account in a PyBossa server
-Now that you've all the requirements installed in your system, you need
-a PyBossa account:
-
-*  Create an account in your PyBossa server (use [Crowdcrafting](http://crowdcrafting.org) if you want).
-*  Copy your API-KEY (you can find it in your profile page).
-
-## Configure pybossa-pbs command line
-
-PyBossa-pbs command line tool can be configured with a config file in order to
-avoid typing the API-KEY and the server every time you want to take an action
-on your project. For this reason, we recommend you to actually create the
-config file. For creating the file, follow the next steps:
+These _have_ to correspond to a file stored in google cloud. 
+To add the tasks, type, while in this directory: 
 
 ```bash
-    $ cd ~
-    $ editorofyourchoice .pybossa.cfg
+    $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> add_tasks --tasks-file <<task file name.csv>>
+```
+then
+```bash
+    $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> update_project
 ```
 
-That will create a file. Now paste the following:
-
-```ini
-[default]
-server: http://yourpybossaserver.com
-apikey: yourapikey
-```
-
-Save the file, and you are done! From now on, pybossa-pbs will always use the
-default section to run your commands.
-
-## Create the project
-
-Now that we've everything in place, creating the project is as simple as
-running this command:
+Because I didn’t know where to put a stylesheet on the pybossa server, I uploaded it to google cloud and made it public there:
 
 ```bash
-    $ pbs create_project
+gsutil cp idtracks_pbossa.css  gs://gfw-crowd/task_assets/idtracks_pbossa.css
+gsutil acl set public-read gs://gfw-crowd/task_assets/idtracks_pbossa.css
 ```
-
-## Adding some tasks
-
-Now we can add some tasks. The project comes with two samples that you can use:
-
- * flickr_tasks.csv: a CSV file with some tasks
- * get_images.py: a script that will contact Flickr to create a JSON file with
-   links to images
-
-### Using a CSV file for adding tasks
-
-This is very simple too, thanks to pbs:
-
-```bash
-    $ pbs add_tasks --tasks-file flickr_tasks.csv
-```
-You'll get a progress bar with the tasks being uploaded. Now your project has
-some tasks in the server to be processed by the volunteers.
-
-### Using a JSON file for adding tasks
-
-Instead of giving you a JSON file, we wanted to show you how you can use a web
-service like Flickr to query it and get the images that want to do image
-pattern recognition. For this reason, we've created the script
-**get_images.py**.
-
-When you run this script, it will contact Flickr, get the last 20 published
-photos in the web services, get its links, and write a file in JSON format
-named: **flickr_tasks.json**. We'll use this file to add some extra tasks to
-our project:
-
-```bash
-    $ python get_images.py
-    $ pbs add_tasks --tasks-file flickr_tasks.json
-```
-
-Again, as before, you will see a progess bar as the tasks are being added to
-your project. You can modify get_images.py to adapt it for your needs ;-)
-
-## Finally, add the task presenter, tutorial and long description
-
-Now that we've some data to process, let's add to our project the required
-templates to show a better description of our project, to present the tasks to
-our users, and a small tutorial for the volunteers:
-
-```bash
-    $ pbs update_project
-```
-
-Done! Now you can do image pattern recognition problems in the PyBossa server.
-
-**NOTE**: we provide templates also for Bootstrap v2 in case your PyBossa
-server is using Bootstrap2 instead of Bootstrap3. See the rest of the files.
-
-Documentation
-=============
-
-We recommend that you read the section: [Build with PyBossa](http://docs.pybossa.com/en/latest/build_with_pybossa.html), follow the [step by step tutorial](http://docs.pybossa.com/en/latest/user/tutorial.html) and read the [PyBossa pbs documentation](https://github.com/PyBossa/pbs).
-
-**NOTE**: This project uses the [pybossa-pbs](https://pypi.python.org/pypi/pybossa-pbs) library in order to simplify the development of the project and its usage. Check the [documentation](https://github.com/PyBossa/pbs).
-
-
-LICENSE
-=======
-
-Copyright (C) 2015 [SciFabric LTD](http://scifabric.com)
-
-Please, see the COPYING file.
-
-
-Acknowledgments
-===============
-The thumbnail has been created using a [photo](http://www.flickr.com/photos/mcgraths/3289448299/) from Sean McGrath (license CC BY 2.0). 
-
-
-**Note**: You can see the results of the Crowdcrafting app [here](http://dev.pybossa.com/app-flickrperson/results.html)
+Now it is available and public at http://storage.googleapis.com/gfw-crowd/task_assets/idtracks_pbossa.css  
