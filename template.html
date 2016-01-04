@@ -43,6 +43,7 @@
             <button class="btn btn-success btn-answer" value='trawler'><i class="fa fa-thumbs-o-up"></i><span id="i18n_trawler">Trawler</span></button>
             <button class="btn btn-success btn-answer" value='longliner'><i class="fa fa-thumbs-o-up"></i><span id="i18n_longlinger">Longliner</span></button>
              <button class="btn btn-success btn-answer" value='reefer'><i class="fa fa-thumbs-o-up"></i><span id="i18n_reefer">Reefer/Fish Carrier</span></button>
+            <button class="btn btn-danger btn-answer" value='not_fishing'><i class="fa fa-thumbs-o-down"></i><span id="i18n_nofishing">Not A Fishing Vessel</span></button>
             <button class="btn btn-danger btn-answer" value='multiple_vessles'><i class="fa fa-thumbs-o-down"></i><span id="i18n_multiple">Multiple Vessels</span></button>
             <button class="btn btn-danger btn-answer" value='not_enough_data'><i class="fa fa-thumbs-o-down"></i><span id="i18n_lowdata">Not Enough Data</span></button>
             <button class="btn btn-danger btn-answer" value='bad_data'><i class="fa fa-thumbs-o-down"></i><span id="i18n_nodata">Bad/No Data</span></button>
@@ -167,6 +168,7 @@ var messages = {"en": {
                         "i18n_longlinger": "Longliner",
                         "i18n_reefer": "Reefer/Fish Carrier",
                         "i18n_multiple": "Multiple Vessels",
+                        "i18n_nofishing": "Not a Fishing Vessel",
                         "i18n_lowdata": "Not Enough Data",
                         "i18n_nodata": "Bad/No Data",
                         "i18n_i_dont_know": "I don't know",
@@ -332,7 +334,9 @@ function drawtracks(mmsi, year, month){
                  polylines.push(L.polyline([[lats[i],lons[i]],[lats[i-1],lons[i-1]]], {color: 'black', opacity:1,weight:1, date:d}));
               }
             }
-            speedArray.push({date:d,close:sogs[i]});
+            if (sogs[i] < 80){ //sometimes it registers 100 knots, which is obviously not a real value
+                speedArray.push({date:d,close:sogs[i]});
+            }
 
         }
 
