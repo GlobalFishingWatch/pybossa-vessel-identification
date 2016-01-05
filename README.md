@@ -4,7 +4,13 @@ The goal of this project is to categorize vessels based on their tracks and info
 
 To see how to install PyBossa, see installation.md
 
-The vessel identification project has six main files:
+There are currently two different crowdsourcing projects in this RePo, in the folders VerifyVessels and FishingVesselID.
+
+VerifyVessels is used to check to see if the neural net correctly identified vessels.
+FishingVesselID is used to identify different types of vessels.
+
+
+In each of these folders are the follow files for these projects:
 
 * **project.json**: a JSON file that describes the project.
 * **long_description.md**: a Markdown file with a long description of the
