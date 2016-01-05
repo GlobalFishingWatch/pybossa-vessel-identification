@@ -1,0 +1,6 @@
+{
+    "name": "Verify the Neural Net",
+    "short_name": "neural_net_test",
+    "description": "Verify the Neural Net",
+    "question": "Did we classify this vessel correctly?"
+}
