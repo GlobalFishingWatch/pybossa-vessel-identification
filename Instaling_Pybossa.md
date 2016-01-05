@@ -10,7 +10,7 @@ Anyway, here it goes:
 
 ###1 Create and configure Google Cloud Virtual Machine
 Settings:
-* Ubuntu 4.04
+* Ubuntu 14.04
 * Allow http and https traffic, and api access (although these may not matter)
 * add the tag “pybossa-dev” -- this allows us to access the port 5000. Eventually we need to set up real server to allow access to this instance of PyBossa.
 
