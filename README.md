@@ -38,8 +38,8 @@ Then you can upload some tasks. These are in the format of a csv file, and they 
 * month (1-12)
 * year
 
-These _have_ to correspond to a file stored in google cloud. 
-To add the tasks, type, while in this directory: 
+These _have_ to correspond to a file stored in google cloud, stored in the bucket gfw-crowd
+To add the tasks, type, while in the directory of one of these two projects type: 
 
 ```bash
     $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> add_tasks --tasks-file <<task file name.csv>>
