@@ -4,7 +4,13 @@ The goal of this project is to categorize vessels based on their tracks and info
 
 To see how to install PyBossa, see installation.md
 
-The vessel identification project has six main files:
+There are currently two different crowdsourcing projects in this RePo, in the folders VerifyVessels and FishingVesselID.
+
+VerifyVessels is used to check to see if the neural net correctly identified vessels.
+FishingVesselID is used to identify different types of vessels.
+
+
+In each of these folders are the follow files for these projects:
 
 * **project.json**: a JSON file that describes the project.
 * **long_description.md**: a Markdown file with a long description of the
@@ -32,8 +38,8 @@ Then you can upload some tasks. These are in the format of a csv file, and they 
 * month (1-12)
 * year
 
-These _have_ to correspond to a file stored in google cloud. 
-To add the tasks, type, while in this directory: 
+These _have_ to correspond to a file stored in google cloud, stored in the bucket gfw-crowd
+To add the tasks, type, while in the directory of one of these two projects type: 
 
 ```bash
     $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> add_tasks --tasks-file <<task file name.csv>>

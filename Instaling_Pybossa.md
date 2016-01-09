@@ -51,3 +51,62 @@ Now the following two commands with get everything running. I ran "nohup" so tha
 python cli.py db_create
 nohup python run.py &
 ```
+
+## Nginx Proxy (Optional)
+
+In order to have requests on port 80 there are two possibilities:
+- Chaning the port on settings_local.py to 80. But this requires all steps on the setup to be done with sudo so it pybossa has rights for using port 80.
+- Using a proxy.
+
+Following steps are for setting up nginx on the GCE to attend the request on port 80.
+
+1- Install nginx
+```
+sudo apt-get update
+sudp apt-get install nginx
+```
+2- Add proxy configuration
+```
+sudo vim /etc/nginx/conf.d/proxy.conf
+```
+And enter the following configuration
+```
+server {
+
+    listen 80;
+
+    location / {
+
+      proxy_set_header        Host $host;
+      proxy_set_header        X-Real-IP $remote_addr;
+      proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header        X-Forwarded-Proto $scheme;
+
+      # Fix the "It appears that your reverse proxy set up is broken" error.
+      proxy_pass          http://0.0.0.0:5000;
+      proxy_read_timeout  90;
+    }
+  }
+```
+3- Remove default nginx page configuration:
+```
+sudo rm /etc/nginx/sites-available/default
+sudo rm /etc/nginx/sites-enabled/default
+```
+4- Restart nginx service
+```
+sudo service nginx restart
+```
+# Restarting services
+
+- Pybossa
+```
+cd PYBOSSA_DIR
+virtualenv env
+source env/bin/activate
+nohup python run.py &
+```
+- Nginx
+```
+sudo service nginx restart|start|stop
+```
