@@ -1,0 +1,6 @@
+{
+    "name": "Verify Vessel Identification",
+    "short_name": "verify_message5and24",
+    "description": "Verify type 5 and type 24 messages",
+    "question": "Are these vessels what they say there are?"
+}
