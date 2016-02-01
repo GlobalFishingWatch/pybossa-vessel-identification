@@ -61,6 +61,17 @@
 
 <!--Link to Marine Traffic -->
     <div id="marineTraffic" style="color:black;font-size:17px;padding-bottom:5px;"></div>
+    <div id="googleSearch" style="color:black;font-size:17px;padding-bottom:5px;"></div>
+    <div style="color:black;font-size:17px;padding-bottom:5px;">Did you find anything about this vessel in your search?
+<form>
+  <input type="radio" name="didsearch" value="Yes" id="yesSearch" > Yes<br>
+  <input type="radio" name="didsearch" value="No" id="noSearch"> No <br>
+  <input type="radio" name="didsearch" value="notYet" id="notYet" checked> Haven't looked yet
+</form>
+     <form>
+         If yes, enter the website in this textbox: <textarea id="text_search" rows="1" style="width:150px"></textarea>
+       </form>
+    </div>
 <!-- End Success and Error Messages for the user -->
 
         <div id="answer"> <!-- Start DIV for the submission buttons -->
@@ -249,10 +260,14 @@ pybossa.presentTask(function(task, deferred) {
         //update the Marine Traffic links
         var href = "http://www.marinetraffic.com/en/ais/details/ships/"+mmsi;
         $("#marineTraffic").html("Look this vessel up on <a href='"+href+"' target='_blank'>Marine Traffic</a>");
-        
+
         //Marine Traffic iframe -- commented out for this version
         //$("#marineTrafficiFrame").html("<iframe src='"+href+"' width=100% height = 2000 px></iframe>");
        
+        //update the search on Google
+        var google_href = "http://www.google.com/search?q=mmsi+"+mmsi.toString();
+         $("#googleSearch").html("Search for this mmsi <a href='"+google_href+"' target='_blank'>on Google</a>");
+
 
         var available_months = "See Other Months: ";
         if(months_2014){
@@ -291,7 +306,29 @@ pybossa.presentTask(function(task, deferred) {
             } 
             if (typeof answer != 'undefined') {
                 console.log(answer);
-                pybossa.saveTask(task.id, answer).done(function() {
+                if($("#notYet").is(':checked')){
+                    alert("Please search for the vessel on Google!");
+                    return;
+                } else {
+                    if($("#yesSearch").is(':checked')){var search = "Yes";
+                        if($("#text_search").val()==""){
+                            alert("Please enter the results of your web search in the text box. Thanks!");
+                            return;
+                        }
+
+                    }
+                    else{var search = "Yes";}
+
+                    answer_string = '{"mmsi":"'+mmsi.toString()+'","vesselType":"'+answer+'","search":"'+search+'",';
+                    answer_string += '"search_url":"'+ $("#text_search").val() + '"}';
+
+
+
+                }
+
+
+
+                pybossa.saveTask(task.id, answer_string).done(function() {
                     deferred.resolve();
                 });
                 $("#loading").fadeIn(500);
@@ -353,7 +390,7 @@ function drawtracks(mmsi, year, month){
     $("#loadingText").attr('style','z-index: 10000; top: 270px;  left: 50%;  margin-top: -30px;  margin-left: -100px;  background-color: #333333;  position: absolute;  padding: 6px;  opacity: .8;  color:white; font-size: 13px;');
 
     //get the appropriate json file from google cloud storage, and then populated the map
-    $.getJSON('http://cors.io/?u=http://storage.googleapis.com/gfw-crowd/'+mmsi+"_"+(year).toString()+"_"+(month).toString()+".json", function(response){
+    $.getJSON('http://storage.googleapis.com/gfw-crowd/'+mmsi+"_"+(year).toString()+"_"+(month).toString()+".json", function(response){
         line=response;
         console.log(line);
         lats = line['lats'];
@@ -362,37 +399,39 @@ function drawtracks(mmsi, year, month){
         timestamps = line['timestamps'];
 
         for (var i = 0; i < lats.length; i++) {
+            if(sogs[i]>.1){ //try excluding zero values at port
 
-            d = timestamps[i].split(" ")[0].split("-");
-            hs = timestamps[i].split(" ")[1].split(":");
-            d = new Date(d[0],parseInt(d[1])-1,d[2],hs[0],hs[1],hs[2]);
+                d = timestamps[i].split(" ")[0].split("-");
+                hs = timestamps[i].split(" ")[1].split(":");
+                d = new Date(d[0],parseInt(d[1])-1,d[2],hs[0],hs[1],hs[2]);
 
-            geoJsonData.features.push({
-                type: 'Feature',
-                properties: {
-                    // The important part is here: that each feature has some property
-                    // that we refer to later on, in `pointToLayer`, that determines
-                    // the size of the scaled circle.
-                    count: sogs[i],
-                    "popupContent": "mmsi: "+mmsi+"<br>"+timestamps[i]+"<br>speed: "+sogs[i].toString(),
-                    date: d
-                },
-                geometry: {
-                    type: 'Point',
-                    coordinates: [lons[i],lats[i]]
+                geoJsonData.features.push({
+                    type: 'Feature',
+                    properties: {
+                        // The important part is here: that each feature has some property
+                        // that we refer to later on, in `pointToLayer`, that determines
+                        // the size of the scaled circle.
+                        count: sogs[i],
+                        "popupContent": "mmsi: "+mmsi+"<br>"+timestamps[i]+"<br>speed: "+sogs[i].toString(),
+                        date: d
+                    },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [lons[i],lats[i]]
+                    }
+                });
+
+                //This draws many individual lines instead of one long one. The reason is so that we can avoid 
+                //the international dateline challebges, and so that we can turn them off one at a time with the slider
+                if(i>0){
+                  if( (lons[i]>90 && lons[i-1]<-90) || (lons[i-1]>90 && lons[i]<-90) ) {
+                  }else{
+                     polylines.push(L.polyline([[lats[i],lons[i]],[lats[i-1],lons[i-1]]], {color: 'black', opacity:1,weight:1, date:d}));
+                  }
                 }
-            });
-
-            //This draws many individual lines instead of one long one. The reason is so that we can avoid 
-            //the international dateline challebges, and so that we can turn them off one at a time with the slider
-            if(i>0){
-              if( (lons[i]>90 && lons[i-1]<-90) || (lons[i-1]>90 && lons[i]<-90) ) {
-              }else{
-                 polylines.push(L.polyline([[lats[i],lons[i]],[lats[i-1],lons[i-1]]], {color: 'black', opacity:1,weight:1, date:d}));
-              }
-            }
-            if (sogs[i] < 80){ //sometimes it registers 100 knots, which is obviously not a real value
-                speedArray.push({date:d,close:sogs[i]});
+                if (sogs[i] < 80){ //sometimes it registers 100 knots, which is obviously not a real value
+                    speedArray.push({date:d,close:sogs[i]});
+                }
             }
 
         }
