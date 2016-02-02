@@ -581,14 +581,21 @@ function makeHistogram(sdate,edate){
   //remove any data that was there before
   d3.select("#histogram svg").remove();
 
-  var values = d3.range(1000).map(d3.random.bates(10));
+  // var values = d3.range(1000).map(d3.random.bates(10));
 
-  values = new Array();
+  var values = new Array();
+  var values_overzero = 0;
+
   for(var i = 0;i<speedArray.length;i++){
        if(speedArray[i]['date']>=sdate && speedArray[i]['date']<=edate){
            values.push(speedArray[i]['close']);
+           if(speedArray[i]['close']>.1){values_overzero++}; // this is crap code
        }
   }
+
+  if(values.length <3 || values_overzero <3 ){return;} // if data is crap, don't draw histogram
+
+
   // A formatter for counts.
   var formatCount = d3.format(",.0f");
 

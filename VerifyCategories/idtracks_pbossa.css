@@ -48,6 +48,8 @@ box-sizing: border-box;         /* Opera/IE 8+ */
 
   #speedChart .axis path,
   #speedChart .axis line,
+    #speedChart2 .axis path,
+  #speedChart2 .axis line,
   #histogram .axis line,
   #histogram .axis path {
       fill: none;
