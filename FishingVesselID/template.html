@@ -16,7 +16,7 @@
     </div>
     <div id="speedChart2"></div>
     <div id="histogram"></div>
-
+    <div id="histogramImage"></div>
     <!-- Success and Error Messages for the user --> 
 
     <div class="row">
@@ -57,7 +57,7 @@
             <input type="radio" name="didsearch" value="notYet" id="notYet" checked> Haven't looked yet
         </form>
         <form>
-            If yes, enter the website in this textbox: <textarea id="text_search" rows="1" style="width:150px"></textarea>
+            If yes, enter the website in this textbox: <textarea id="text_search" rows="1" style="width:150px" value="" autocomplete="off"></textarea>
         </form>
     </div>
     <!-- End Success and Error Messages for the user -->
@@ -68,6 +68,7 @@
             <button class="btn btn-success btn-answer" value='trawler'><i class="fa fa-thumbs-o-up"></i><span id="i18n_trawler">Trawler</span></button>
             <button class="btn btn-success btn-answer" value='longliner'><i class="fa fa-thumbs-o-up"></i><span id="i18n_longlinger">Longliner</span></button>
              <button class="btn btn-success btn-answer" value='reefer'><i class="fa fa-thumbs-o-up"></i><span id="i18n_reefer">Reefer/Fish Carrier</span></button>
+             <button class="btn btn-success btn-answer" value='multi_gear'><i class="fa fa-thumbs-o-up"></i><span id="i18n_multigear">Multi-Gear</span></button>
              <button class="btn btn-success btn-answer" value='other_fishing'><i class="fa fa-thumbs-o-up"></i><span id="i18n_otherfish">Other Fishing Vessel</span></button>
         </div>
         <div style="margin-bottom:5px">
@@ -79,7 +80,7 @@
             <button class="btn btn-answer" value='not_known'><i class="fa fa-question-circle"></i> <span id="i18n_i_dont_know">I don't know</span></button>
         </div>
         <form class="form-inline" style=" display:inline!important;">
-                I don't think it is any of these vessels. I think it is a (enter text): <textarea id="text" rows="1" style="width:150px"></textarea>
+                I don't think it is any of these vessels. I think it is a (enter text): <textarea id="text" rows="1" style="width:150px" value="" autocomplete="off"></textarea>
        </form> <button class="btn btn-answer" value='textInput'>Submit Vessel Suggestion</button> 
 
     </div><!-- End of DIV for the submission buttons -->
@@ -132,6 +133,10 @@ var points;
 var polylines;
 var speedArray; 
 
+
+document.getElementById( "text" ).setAttribute( "autocomplete","off" );
+document.getElementById( "text_search" ).setAttribute( "autocomplete","off" );
+
 //create the map
 L.mapbox.accessToken = 'pk.eyJ1IjoiZGF2aWRrcm9vZHNtYSIsImEiOiJjaWYzZ3U1ODEycDBwczVtNWpmbTNiMzQyIn0.DbC4XPpCftqbPIJRd1xdxQ';
 map = L.mapbox.map('vessel_map', 'mapbox.streets', {scrollWheelZoom: false});
@@ -161,6 +166,8 @@ function loadUserProgress() {
 
 
 pybossa.presentTask(function(task, deferred) {
+    document.getElementById( "text" ).value = "";
+    document.getElementById( "text_search" ).value="";
     if ( !$.isEmptyObject(task) ) {
         loadUserProgress();
         // i18n_translate(); // no need to translate the messages
@@ -203,6 +210,10 @@ pybossa.presentTask(function(task, deferred) {
             }
         }
        $("#allMonths").html(available_months);
+
+
+        //update histogram image
+        $("#histogramImage").html("<img src='http://storage.googleapis.com/gfw-crowd/histogram/"+mmsi+".png'>");
 
         drawtracks(mmsi, year, month);
 

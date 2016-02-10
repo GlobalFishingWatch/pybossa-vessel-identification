@@ -367,7 +367,7 @@ function drawtracks(mmsi, year, quarter){
     //scroll to the top
     document.body.scrollTop = document.documentElement.scrollTop = 0;
     //now set the quarter
-    current_quarter = quarter;
+    current_quarter = parseInt(quarter);
 
     //$("#currentMonth").text("Year: "+year+" Month: "+month_ab[parseInt(month)-1]);// "+month_ab[parseInt(month)]+ " "+year.toString());
 
@@ -397,7 +397,7 @@ function drawtracks(mmsi, year, quarter){
     $("#loadingText").attr('style','z-index: 10000; top: 270px;  left: 50%;  margin-top: -30px;  margin-left: -100px;  background-color: #333333;  position: absolute;  padding: 6px;  opacity: .8;  color:white; font-size: 13px;');
 
     //get the appropriate json file from google cloud storage, and then populated the map
-    $.getJSON('http://storage.googleapis.com/gfw-crowd/'+mmsi+"_"+(year).toString()+"_q"+(quarter+1).toString()+".json", function(response){
+    $.getJSON('http://storage.googleapis.com/gfw-crowd/'+mmsi+"_"+(year).toString()+"_q"+(parseInt(quarter)+1).toString()+".json", function(response){
         line=response;
         console.log(line);
         lats = line['lats'];
@@ -476,7 +476,7 @@ function drawtracks(mmsi, year, quarter){
     .fail(function() { 
        stop_infinite_loop +=1;
        if(stop_infinite_loop<4){
-         var oq = current_quarter;
+         // var oq = current_quarter;
          current_quarter = 1+parseInt(current_quarter);
          current_quarter = current_quarter %4; //go to next quarter
          // alert('sorry, no data for '+q_ab[oq]+' going to the next month, '+q_ab[current_quarter] ); 
