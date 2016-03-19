@@ -1,0 +1,6 @@
+{
+    "name": "Reviewing Model Output, Low Confidence Fishing Vessels",
+    "short_name": "id_fishing_vessels_lc",
+    "description": "Identify Vessel Tracks",
+    "question": "What type of vessel is this?"
+}

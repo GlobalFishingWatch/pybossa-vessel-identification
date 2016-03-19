@@ -1,0 +1,6 @@
+{
+    "name": "Identifying River Vessels",
+    "short_name": "id_river_vessels",
+    "description": "Identify Vessel Tracks",
+    "question": "What type of vessel is this?"
+}

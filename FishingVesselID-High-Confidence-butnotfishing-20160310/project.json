@@ -1,0 +1,6 @@
+{
+    "name": "Reviewing Model Output, High Confidence, Low Label Confidence",
+    "short_name": "id_fishing_vessels_hclc",
+    "description": "Identify Vessel Tracks",
+    "question": "What type of vessel is this?"
+}

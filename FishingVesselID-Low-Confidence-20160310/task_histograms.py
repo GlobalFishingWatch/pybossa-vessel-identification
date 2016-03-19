@@ -5,34 +5,24 @@ import urllib2
 import matplotlib.pyplot as plt
 import time
 
-sourcedir = ''
-filename = 'map_tasks_20160224.csv'
-outdir = "../data/vessel_histograms_20160224/"
 
-def make_histogram(mmsi, months_2014, months_2015):
+
+# After running this code, you have to upload the files to gcloud
+# !gsutil -m cp *  gs://gfw-crowd/
+# and then 
+# gsutil -m acl set -R -a public-read gs://gfw-crowd/
+
+
+sourcedir = ''
+filename = 'map_tasks_20160310_lc.csv'
+outdir = "../data/vessel_histograms_20160310_lc/"
+
+def make_histogram(mmsi, months_2015):
 
     sogs = []
-    for m in months_2014:
-        if m!= "":
-            url = 'http://storage.googleapis.com/gfw-crowd/'+mmsi+"_2014_"+m+".json"
-            print url
-            try:
-                f = urllib2.urlopen(url)
-                myfile = f.read()
-                j = json.loads(myfile)
-                sogs += j['sogs']
-            except:
-                time.sleep(5)
-                try:
-                    f = urllib2.urlopen(url)
-                    myfile = f.read()
-                    j = json.loads(myfile)
-                    sogs += j['sogs']
-                except: 
-                    print "no file for ", url
     for m in months_2015:
         if m != "":
-            url = 'http://storage.googleapis.com/gfw-crowd/'+mmsi+"_2015_"+m+".json"
+            url = 'http://storage.googleapis.com/gfw-crowd/lc/'+mmsi+"_2015_"+m+".json"
             print url
             try:
                 f = urllib2.urlopen(url)
@@ -83,9 +73,9 @@ with open(sourcedir + filename,'rU') as f:
     reader = csv.DictReader(f, delimiter=',')
     for row in reader:
         mmsi = row['mmsi']
-        months_2014 = row['months_2014'].split(",")
+     #   months_2014 = row['months_2014'].split(",")
         months_2015 = row['months_2015'].split(",")
-        make_histogram(mmsi, months_2014, months_2015)
+        make_histogram(mmsi, months_2015)
 
 
 
