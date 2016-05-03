@@ -100,7 +100,11 @@ sudo service nginx restart
 # Restarting services
 
 - Pybossa
+ 
 ```
+# Find and kill the runing run.py instance if any
+ps -ef | grep run.py
+kill -9 PROCCESS_ID
 cd PYBOSSA_DIR
 virtualenv env
 source env/bin/activate
