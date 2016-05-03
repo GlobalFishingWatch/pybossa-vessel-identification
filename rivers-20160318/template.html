@@ -184,7 +184,9 @@ pybossa.presentTask(function(task, deferred) {
         //update the Marine Traffic links
         var href = "http://www.marinetraffic.com/en/ais/details/ships/"+mmsi;
         $("#marineTraffic").html("Look this vessel up on <a href='"+href+"' target='_blank'>Marine Traffic</a>");
-
+        
+        //Marine Traffic iframe -- commented out for this version
+        $("#marineTrafficiFrame").html("<iframe src='"+href+"' width=100% height = 2000 px></iframe>");
         //Marine Traffic iframe -- commented out for this version
         //$("#marineTrafficiFrame").html("<iframe src='"+href+"' width=100% height = 2000 px></iframe>");
        

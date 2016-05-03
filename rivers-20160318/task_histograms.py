@@ -13,7 +13,10 @@ import time
 # gsutil -m acl set -R -a public-read gs://gfw-crowd/river/histogram/
 sourcedir = ""
 filename = 'map_tasks_20160318.csv'
-outdir = "../data/vessel_histograms_20160318/"
+filename = 'map_tasks_20160324_nochina.csv' #second time
+filename = 'map_tasks_20160331_suspectedfishing.csv' #third time
+outdir = "../data/vessel_histograms_20160324/"
+outdir = "../data/vessel_histograms_20160331/"
 
 def make_histogram(mmsi, months_2015):
 

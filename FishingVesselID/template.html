@@ -323,7 +323,7 @@ function drawtracks(mmsi, year, month){
         timestamps = line['timestamps'];
 
         for (var i = 0; i < lats.length; i++) {
-            if(sogs[i]>.1 || i<3){ //try excluding zero values at port, but also make sure there are at least three pints
+            if(sogs[i]>=0 || i<3){ //try excluding zero values at port, but also make sure there are at least three pints
 
                 d = timestamps[i].split(" ")[0].split("-");
                 hs = timestamps[i].split(" ")[1].split(":");

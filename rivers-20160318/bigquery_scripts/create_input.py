@@ -5,6 +5,8 @@ from operator import itemgetter
 
 
 mypath = "../../data/vessels_20160318/"
+mypath = "../../data/vessels_20160324/"
+mypath = "../../data/vessels_20160331/"
 files = [f.replace(".json","") for f in listdir(mypath) if isfile(join(mypath, f)) and ".json" in f]
 
 vessels_doubled = [f.split("_")[0] for f in files]
