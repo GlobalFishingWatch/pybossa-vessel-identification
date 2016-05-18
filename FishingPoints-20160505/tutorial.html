@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="col-md-12">
+        <div id="modal" class="modal hide fade">
+            <div class="modal-header">
+                <h3>Identify Fishing Vessels</h3>
+            </div>
+            <div id="0" class="modal-body" style="display:none">
+                <p>Can you identify fishing vessels?
+               </p> 
+            </div>
+            <div id="1" class="modal-body" style="display:none">
+                <p>Thank you for helping Global Fishing Watch!</p>
+                <p>The goal of this project is to identify when a vessel is fishing. You will be shown the tracks of a vessel for a month, and your taks will be to label <em>every single point in that month</em>.</p>
+                <p>When the month loads, every point's default value is "not fishing." To change a point to be classified as fishing, you can either click on it, or you can use the polygon tool to draw a circle around the points. When a point is labeled as fishing, it changes to be a larger cicle with a black ring around it.</p>
+                <p>You can also label points as "I don't know." This is useful if you know what half of a vessel's track is, but have no idea about the other half.</p>
+                <p>Below the map are two charts showing all the datapoints over the month. The charts look the same, but the top chart has two sliders that you can move to narrow the range of datapoints that are shown. It is often easiest to move the slider and label one day at a time.</p>
+                <p>When you are done, you can click on Submit. First, though, rate the confidence that you have in your classification.</p>
+                <p>If a month loads that you know you can't classify, you can skip it by just clicking on the "Ignore my Answers" button and then "submit".
+                </p>
+                
+            </div>
+            <div class="modal-footer">
+                <a id="prevBtn" href="#" onclick="showStep('prev')" class="btn">Previous</a>
+                <a id="nextBtn" href="#" onclick="showStep('next')" class="btn btn-success">Next</a>
+                <a id="startContrib" href="../id_fishing_points/newtask" class="btn btn-primary" style="display:none"><i class="fa fa-thumbs-o-up"></i> Try it out!</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var step = -1;
+    function showStep(action) {
+        $("#" + step).hide();
+        if (action == 'next') {
+            step = step + 1;
+        }
+        if (action == 'prev') {
+            step = step - 1;
+        }
+        if (step == 0) {
+            $("#prevBtn").hide();
+        }
+        else {
+            $("#prevBtn").show();
+        }
+
+        if (step == 1 ) {
+            $("#nextBtn").hide();
+            $("#startContrib").show();
+        }
+        $("#" + step).show();
+    }
+
+    showStep('next');
+    $("#modal").modal('show');
+</script>
