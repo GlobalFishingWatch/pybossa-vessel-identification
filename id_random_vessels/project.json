@@ -1,0 +1,6 @@
+{
+    "name": "Identifying Random Vessels",
+    "short_name": "id_random_vessels",
+    "description": "Identify Random Vessels",
+    "question": "What type of vessel is this?"
+}
