@@ -48,6 +48,14 @@ Whenver you want to push changes to the website, you ahve to run pbs update_proj
     $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> update_project
 ```
 
+Note that the stylesheets that I created have to be uploaded to Google Cloud Storage and made public. (I think you can put them on the PyBossa server instead, but it was easier to use GCS). Most projects use the css file `idtracks_pbossa.css`:
+
+```bash
+gsutil cp idtracks_pbossa.css  gs://gfw-crowd/task_assets/idtracks_pbossa.css
+gsutil acl set public-read gs://gfw-crowd/task_assets/idtracks_pbossa.css
+```
+and this file is now available at http://storage.googleapis.com/gfw-crowd/task_assets/idtracks_pbossa.css  
+
 Then you have to upload tasks
 
 ### Uploading Tasks
@@ -85,43 +93,3 @@ There are currently two different crowdsourcing projects in this RePo, in the fo
 VerifyVessels is used to check to see if the neural net correctly identified vessels.
 FishingVesselID is used to identify different types of vessels.
 
-
-
-
-# Updating the project
-All of the files above, except idtracks_pbossa.css can be updated using pybossa-pbs
-
-```bash
-    $ pip install pybossa-pbs
-```
-
-To create the project, enter, while in this directory:
-
-```bash
-    $ pbs --server <<url of the pybossa instance>> --api-key <<your api key>>  create_project
-```
-The information about the task has to be in the project.json file
-
-Then you can upload some tasks. These are in the format of a csv file, and they have to have a column for:
-* mmsi
-* month (1-12)
-* year
-
-These _have_ to correspond to a file stored in google cloud, stored in the bucket gfw-crowd
-To add the tasks, type, while in the directory of one of these two projects type: 
-
-```bash
-    $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> add_tasks --tasks-file <<task file name.csv>>
-```
-then
-```bash
-    $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> update_project
-```
-
-Because I didn’t know where to put a stylesheet on the pybossa server, I uploaded it to google cloud and made it public there:
-
-```bash
-gsutil cp idtracks_pbossa.css  gs://gfw-crowd/task_assets/idtracks_pbossa.css
-gsutil acl set public-read gs://gfw-crowd/task_assets/idtracks_pbossa.css
-```
-Now it is available and public at http://storage.googleapis.com/gfw-crowd/task_assets/idtracks_pbossa.css  
