@@ -32,8 +32,32 @@ In each of the projects are the follow files for these projects:
 * **template.html**: the task presenter where the user/volunteer will identify vessel tracks
 * **tutorial.html**: a simple tutorial that explains how to identify vessels
 
-The file `template.html` is where all of the javascript goes, and which is most heavily edited. The others require only light editing. It is critical to give the project a unique name and id in the file `project.json`, and to make sure this id is used throughout the above files. If you don't, `tutorial.html` and `template.html` will redirect you to a different project.
+The file `template.html` is where all of the javascript goes, and which houses most of the infrastructure for the project. The other files require only light editing. It is critical to give the project a unique name and id in the file `project.json`, and to make sure this id is used throughout the above files. If you don't, `tutorial.html` and `template.html` will redirect you to a different project.
 
+To create a project and upload these files, it is easiest to use the PyBossa command-line tool. Start by installing it:
+```bash
+    $ pip install pybossa-pbs
+```
+To create the project, while in the project directory, run:
+```bash
+    $ pbs --server <<url of the pybossa instance>> --api-key <<your api key>>  create_project
+```
+
+Whenver you want to push changes to the website, you ahve to run pbs update_project:
+```bash
+    $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> update_project
+```
+
+Then you have to upload tasks
+
+### Uploading Tasks
+Tasks for each project are stored in a csv file. We can decide what the columns are, but we also need to make sure the template.html file is set up to accept these columns.
+
+For most projects, the tasks file has the mmsi, year, and month (or a list of months) of the task, as well as sometimes a label such as the vessels geartype (e.g. "purse seiner"). The specifics for each project are listed below. Once the tasks are ready to upload, you can do so with this command:
+```bash
+    $ pbs  --server <<url of the pybossa instance>> --api-key <<your api key>> add_tasks --tasks-file <<task file name.csv>>
+```
+Note that it is a pain to delete tasks, so only do this once you really mean it.
 
 ### Current Projects
 The projects are listed below by their 
@@ -42,12 +66,19 @@ The projects are listed below by their
 This poorly named project is to identify 
 
 #####
-#####
-#####
-#####
-#####
+
 #####
 
+#####
+
+#####
+
+#####
+
+#####
+
+
+### Creating Imp
 
 There are currently two different crowdsourcing projects in this RePo, in the folders VerifyVessels and FishingVesselID.
 
