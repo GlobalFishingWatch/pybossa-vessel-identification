@@ -68,28 +68,52 @@ For most projects, the tasks file has the mmsi, year, and month (or a list of mo
 Note that it is a pain to delete tasks, so only do this once you really mean it.
 
 ### Current Projects
-The projects are listed below by their 
+The projects are listed below by the the name of the folder they are in and then the name on Pybossa
 
-##### maptests2
-This poorly named project is to identify 
+##### maptests2 | Identifying Fishing Vessels
+http://crowd.globalfishingwatch.org/project/maptests2/
+This poorly named project is to identify different types of fishing vessels, and the input was random vessels from the likely fishing list.
+The task file has three columns, `mmsi`, `months_2014`, and `months_2015`
+`months_2014` and `months_2015` are populated by comma seperated strings, listing the months that are available for that given vessel. So, "1,2,3,4,8" means that that vessel has tracks for January, February, March, April, and August of that year
 
-#####
+The results were originally stored a string, giving the classification identified by the user, but then later results were stored as a json obejct so that we could increase the number of fields. The fields in later results are:
+`mmsi`, `vesselType` (the vessel type they identified), `search` (did they search for the vessel online) and `search_url` (relevant urls that include information about this vessel) 
 
-#####
+We currently aren't adding more tasks to this project.
 
-#####
+##### verify_message5and24 | Verify Vessel Identification
+For this project, we obtained ~200 vessels for each of the vessel types as broadcast in the tpye 5 and 24 AIS messages. Basically, we were testing to see if the vessels were what they said they were. 
+The task input for this is `mmsi`,`label`, where the label is what the vessel reported in the type 5 and 24 messages.
 
-#####
+##### id_fishing_vessels_hclc | Reviewing Model Output, High Confidence, Low Label Confidence
+This project was developed to test an early version of the neural net (early March 2016). We selected vessels that had a high confidence according to the Neural Net, but which identified themselves as something else in their type 5 and 24 messages. Dalhousie students worked on some of these tasks, and too many of them were difficult to identify so we stopped using this project.
 
-#####
+##### id_fishing_vessels_lc | Reviewing Model Output, Low Confidence Fishing Vessels
+This project was developed to test an early version of the neural net (early March 2016). We selected fishing vessels that had a low confidence as identified by the neural net, but which identified as fishing vessels in their type 5 and 24. This project was never used.
 
-#####
+##### id_fishing_vessels_v2 | Identifying Fishing Vessels
+This is an updated version of maptests2, and is where we have loaded various vessels to be identified.
+194 vessels have been identified in this project, mostly by Dalhousie students.
+The input is the same as maptests2, except that we didn't include any tracks from 2014, so the tasks file has columns only for `mmsi` and `months_2014`
+The results are the same format at the later results from maptests2: `mmsi`, `vesselType` (the vessel type they identified), `search` (did they search for the vessel online) and `search_url` (relevant urls that include information about this vessel) 
 
+##### id_river_vessels | Identifying River Vessels
+For this project, we drew bounding boxes around the Mississippi, the Danube / Rhine, and the Amazon and selected a random set of boats that had at least 200 points in these bounding boxes. The idea was to classify river vessels.
+The results are in the same format as id_fishing_vessels_v2
 
-### Creating Imp
+##### neural_net_test | Verify the Neural Net
+This project was to test a very early version of the nerual net classifier -- I believe from January of 2016. Although 821 tasks were loaded, we never used this project. 
 
-There are currently two different crowdsourcing projects in this RePo, in the folders VerifyVessels and FishingVesselID.
+##### id_random_vessels | Identifying Random Vessels
+This project is to identify a random set of mmsi to see how well our model is doing compared to an unbiased, random sample. 
+The results are the same format as id_fishing_vessels_2
 
-VerifyVessels is used to check to see if the neural net correctly identified vessels.
-FishingVesselID is used to identify different types of vessels.
+##### id_fishing_points | Identify Fishing Behavior
+This project is used to classify individual points as fishing and non-fishing. Each task is a single month from a single vessel. The task file input csv has four fields: `mmsi`, `year`, `month`, and `vesselType`. `vesselType` is just used to display to the user what type of vessel they are classifying.
+
+The results are stored as a json object with the following fields:
+`mmsi`,`vesselType` (same as the input value -- the user doesn't select this), `text_notes` (a string that the user can enter), `confidence` (the users confidence in the results -- "no_confidence" means ignore these results), and `fishingArrayString` (a string of 1s, 0s, and 2s).
+the `fishingArrayString` is the classification of each point. 0 is nonfishing, 1 is fishing, and 2 is not sure. 
+To line up these results with the underlying data, you have to download the json file with the tracks in it. That json file is in the format `{mmsi number}_{year}_{month}.json`. So mmsi 123456789 on January of 2015 would be `123456789_2015_1.json`, stored at `http://storage.googleapis.com/gfw-crowd/+{json file name}`
+
 
