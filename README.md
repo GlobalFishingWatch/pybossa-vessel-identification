@@ -130,6 +130,6 @@ For many of the above projects, there is a folder `bigquery_scripts` which has s
 
 
 ### Generating Results
-The results of PyBossa can be obtained using their api. In the folder results, there is a Python script `download_results.py` that can be run from the command line as follows: `!python download_results.py {project_id}`. This will download all tasks and tasks_runs from a given project. Each will be a list of json objects. The harder task is then to interpret these tasks, and figure out what to do when different users disagree. 
+The results of PyBossa can be obtained using their [api](http://docs.pybossa.com/en/latest/api.html). However, in my experience, the api doesn't work qute the way it is described in the documentation. In the folder `results`, there is a Python script `download_results.py` that uses the api and that can be run from the command line as follows: `!python download_results.py {project_id}`. This will download all tasks and tasks_runs from a given project. Each will be a list of json objects. The harder task is then to interpret these tasks, and figure out what to do when different users disagree. 
 
 Note that many of the projects have a folder `results` in them, where there are some python scripts that create csv files with the output of the project. These have all been produced in a one-off fashion, and it would be much better if there was some form of standardization.
