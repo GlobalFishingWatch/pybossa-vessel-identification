@@ -117,3 +117,13 @@ the `fishingArrayString` is the classification of each point. 0 is nonfishing, 1
 To line up these results with the underlying data, you have to download the json file with the tracks in it. That json file is in the format `{mmsi number}_{year}_{month}.json`. So mmsi 123456789 on January of 2015 would be `123456789_2015_1.json`, stored at `http://storage.googleapis.com/gfw-crowd/+{json file name}`
 
 
+### Creating Input Data for the Projects
+To create the json files, the follow steps have to take place:
+ - A lit of mmsi must be selected
+ - A table is created in BigQuery that has only the position of these mmsi
+ - This table is either queried for each mmsi, or it is downloaded as big csv file, and then a script loops throuh it and produces the json file for each mmsi for each month. Generally, if there are fewer than 100 points for a month, the scripts don't create a file.
+ - These json files are uploaded to Google Cloud Storage and the permisisons are set to be publically readible
+ - For a number of the projects, a histogram is also created, which is a histogram of the speeds of that vessel (excluding speeds slower than .1 knots) over all the json files for that vessel. 
+ - A tasks csv file is created, and this file varies depending on the project.
+
+The original way to do this was very clunky, 
