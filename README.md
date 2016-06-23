@@ -119,11 +119,17 @@ To line up these results with the underlying data, you have to download the json
 
 ### Creating Input Data for the Projects
 To create the json files, the follow steps have to take place:
- - A lit of mmsi must be selected
- - A table is created in BigQuery that has only the position of these mmsi
+ - A lit of mmsi must be selected to be classified. The vessels selected depend on the project.
+ - A table is created in BigQuery that has only the position of these mmsi.
  - This table is either queried for each mmsi, or it is downloaded as big csv file, and then a script loops throuh it and produces the json file for each mmsi for each month. Generally, if there are fewer than 100 points for a month, the scripts don't create a file.
  - These json files are uploaded to Google Cloud Storage and the permisisons are set to be publically readible
  - For a number of the projects, a histogram is also created, which is a histogram of the speeds of that vessel (excluding speeds slower than .1 knots) over all the json files for that vessel. 
  - A tasks csv file is created, and this file varies depending on the project.
 
-The original way to do this was very clunky, 
+For many of the above projects, there is a folder `bigquery_scripts` which has some of the scripts used to create the json files. The most efficient version is in the project `id_fishing_points`, which does all of these steps in a few python scripts, which can be found in the folder `creating_tasks` in this project. 
+
+
+### Generating Results
+The results of PyBossa can be obtained using their api. In the folder results, there is a Python script `download_results.py` that can be run from the command line as follows: `!python download_results.py {project_id}`. This will download all tasks and tasks_runs from a given project. Each will be a list of json objects. The harder task is then to interpret these tasks, and figure out what to do when different users disagree. 
+
+Note that many of the projects have a folder `results` in them, where there are some python scripts that create csv files with the output of the project. These have all been produced in a one-off fashion, and it would be much better if there was some form of standardization.
