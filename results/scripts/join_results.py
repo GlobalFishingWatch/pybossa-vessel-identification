@@ -16,7 +16,7 @@ with open("%s_task_runs.json" % dataset_name) as f:
 
 cogsogtracks = np.load("%s_cogsog_tracks.npz" % dataset_name)["arr_0"]
 
-res = None
+res = {}
 
 for tidx, task in enumerate(tasks.itervalues()):
     track_filename = "%(mmsi)s_%(year)s_%(month)s.json" % task["info"]
@@ -82,9 +82,11 @@ for tidx, task in enumerate(tasks.itervalues()):
     classified_cogsogtrack = rec.drop_fields(classified_cogsogtrack, ["lat1", "lon1"])
     classified_cogsogtrack = rec.rename_fields(classified_cogsogtrack, {"lon2": "lon", "lat2": "lat"})
 
-    if res is None:
-        res = classified_cogsogtrack
+    vessel = task["info"]["vesselType"].lower()
+    if vessel not in res:
+        res[vessel] = classified_cogsogtrack
     else:
-        res = np.append(res, classified_cogsogtrack)
+        res[vessel] = np.append(res[vessel], classified_cogsogtrack)
 
-np.savez("%s_classified_tracks.npz" % dataset_name, x=res)
+for key, value in res.iteritems():
+    np.savez("%s_%s_classified_tracks.npz" % (dataset_name, key), x=value)
