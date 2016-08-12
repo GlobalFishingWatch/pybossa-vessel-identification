@@ -76,11 +76,29 @@ for tidx, task in enumerate(tasks.itervalues()):
 
     cogsogtrack = cogsogtracks[cogsogtracks["mmsi"] == float(task["info"]["mmsi"])]
 
-    classified_cogsogtrack = rec.join_by(["timestamp"], classified_track, cogsogtrack, "leftouter")
-    classified_cogsogtrack = classified_cogsogtrack[classified_cogsogtrack.mask["lat1"] == False]
 
-    classified_cogsogtrack = rec.drop_fields(classified_cogsogtrack, ["lat1", "lon1"])
-    classified_cogsogtrack = rec.rename_fields(classified_cogsogtrack, {"lon2": "lon", "lat2": "lat"})
+    assert not (classified_track["lat"].max() > 90.0)
+    assert not (cogsogtrack["lat"].max() > 90.0)
+
+    classified_track = rec.append_fields(classified_track, ["speed", "course"], [[],[]], dtypes=["f8","f8"])
+    for idx in xrange(0, len(classified_track)):
+        cogsogitems = cogsogtrack[cogsogtrack["timestamp"] == classified_track["timestamp"][idx]]
+        if not len(cogsogitems): continue
+        classified_track["speed"][idx] = cogsogitems[0]["speed"]
+        classified_track["course"][idx] = cogsogitems[0]["course"]
+    classified_cogsogtrack = classified_track
+    classified_cogsogtrack = classified_cogsogtrack[classified_cogsogtrack.mask["speed"] == False]
+    classified_cogsogtrack = classified_cogsogtrack[classified_cogsogtrack.mask["course"] == False]
+
+    # This code breaks with random values in classified_cogsogtrack["lat"] *sometimes*
+    # The bug only happens some times, even for the same input data
+    # classified_cogsogtrack = rec.join_by(["timestamp"], classified_track, cogsogtrack, "leftouter")
+    # classified_cogsogtrack = classified_cogsogtrack[classified_cogsogtrack.mask["lat1"] == False]
+
+    # classified_cogsogtrack = rec.drop_fields(classified_cogsogtrack, ["lat1", "lon1"])
+    # classified_cogsogtrack = rec.rename_fields(classified_cogsogtrack, {"lon2": "lon", "lat2": "lat"})
+
+    assert not (classified_cogsogtrack["lat"].max() > 90.0)
 
     vessel = task["info"]["vesselType"].lower()
     if vessel not in res:
@@ -88,5 +106,8 @@ for tidx, task in enumerate(tasks.itervalues()):
     else:
         res[vessel] = np.append(res[vessel], classified_cogsogtrack)
 
+    assert not (res[vessel]["lat"].max() > 90.0)
+
+
 for key, value in res.iteritems():
-    np.savez("%s_%s_classified_tracks.npz" % (dataset_name, key), x=value)
+    np.savez("%s_%s_classified_tracks.npz" % (dataset_name, key), x=value.filled())
