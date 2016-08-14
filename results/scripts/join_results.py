@@ -80,12 +80,22 @@ for tidx, task in enumerate(tasks.itervalues()):
     assert not (classified_track["lat"].max() > 90.0)
     assert not (cogsogtrack["lat"].max() > 90.0)
 
-    classified_track = rec.append_fields(classified_track, ["speed", "course"], [[],[]], dtypes=["f8","f8"])
-    for idx in xrange(0, len(classified_track)):
-        cogsogitems = cogsogtrack[cogsogtrack["timestamp"] == classified_track["timestamp"][idx]]
-        if not len(cogsogitems): continue
-        classified_track["speed"][idx] = cogsogitems[0]["speed"]
-        classified_track["course"][idx] = cogsogitems[0]["course"]
+    classified_track = rec.append_fields(classified_track, ["speed", "course", 'mmsi'], [[],[],[]], dtypes=["f8","f8","f8"])
+    
+    
+    cogsogtrack.sort(order='timestamp')
+    sort_inds = np.searchsorted( cogsogtrack["timestamp"], classified_track["timestamp"])
+    has_match = cogsogtrack["timestamp"][sort_inds] == classified_track['timestamp']
+    match_inds = sort_inds[has_match]
+    classified_track["speed"][has_match] = cogsogtrack["speed"] [match_inds]
+    classified_track["course"][has_match] = cogsogtrack["course"] [match_inds]
+    classified_track['mmsi'] = task["info"]["mmsi"]
+    
+#     for idx in xrange(0, len(classified_track)):
+#         cogsogitems = cogsogtrack[cogsogtrack["timestamp"] == classified_track["timestamp"][idx]]
+#         if not len(cogsogitems): continue
+#         classified_track["speed"][idx] = cogsogitems[0]["speed"]
+#         classified_track["course"][idx] = cogsogitems[0]["course"]
     classified_cogsogtrack = classified_track
     classified_cogsogtrack = classified_cogsogtrack[classified_cogsogtrack.mask["speed"] == False]
     classified_cogsogtrack = classified_cogsogtrack[classified_cogsogtrack.mask["course"] == False]
