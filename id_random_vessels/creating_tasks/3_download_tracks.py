@@ -6,7 +6,7 @@ import csv
 import matplotlib.pyplot as plt
 
 
-today_date = "20160624"
+today_date = "20160722"
 
 out_dir = '../../data/vessels_'+today_date+'/'
 if not os.path.exists(out_dir):
@@ -135,12 +135,15 @@ for mmsi in mmsis:
     make_histogram(mmsi, sogs)
 
 
-# tasks are in the wrong format
+# # tasks are in the wrong format
 
-print tasks
+# print tasks
 tasks2 = []
 for m in mmsis:
-    tasks2.append(m, ",".join(mmsis[m]))
+    mmsi_list = []
+    for mmsi in mmsis[m]:
+        mmsi_list.append(str(mmsi))
+    tasks2.append(m, ",".join(mmsi_list))
 
 # now create the task infile
 with open("../tasks_"+today_date+".csv", 'wb') as f:
