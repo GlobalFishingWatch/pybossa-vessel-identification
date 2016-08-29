@@ -16,7 +16,7 @@ from oauth2client.client import GoogleCredentials
 import csv
 
 # this is the key used to identify all tracks made on a given day
-today_date = "20160624"
+today_date = "20160722"
 
 path_to_table_dir = "../../data/bigquery_tables/"
 
