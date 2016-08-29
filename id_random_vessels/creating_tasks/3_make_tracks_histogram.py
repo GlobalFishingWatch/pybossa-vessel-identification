@@ -6,7 +6,7 @@ import csv
 import matplotlib.pyplot as plt
 
 
-today_date = "20160612"
+today_date = "20160722"
 
 # get the input files and normalize the names for later inputs
 vessels = []

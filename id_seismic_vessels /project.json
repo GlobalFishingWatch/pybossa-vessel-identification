@@ -1,0 +1,6 @@
+{
+    "name": "Identifying Seismic Vessels",
+    "short_name": "id_seismic_vessels",
+    "description": "Identify Seismic Vessels",
+    "question": "What type of vessel is this?"
+}

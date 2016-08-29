@@ -4,7 +4,7 @@ import random
 from operator import itemgetter
 import csv
 
-today_date = "20160624"
+today_date = "20160722"
 mypath = "../../data/vessels_"+today_date+"/"
 mypath = "../../data/vessels_"+today_date+"/"
 files = [f.replace(".json","") for f in listdir(mypath) if isfile(join(mypath, f)) and ".json" in f]
