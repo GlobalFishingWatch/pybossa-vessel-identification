@@ -1,6 +1,8 @@
 data/
-.DS_Store
-.npz
+*.DS_Store
+*.npz
+*.csv
+*.json
 
 
 # Byte-compiled / optimized / DLL files
