@@ -151,7 +151,7 @@ var geoJsonData;
 var points;
 var polylines;
 var speedArray; 
-var fishingArray = new Array();
+var fishingArray;
 
 var polyChange = "fishing";
 
@@ -374,6 +374,7 @@ function drawtracks(mmsi, year, month) {
     //zero and initialize the polylines, speedArray, and geoJsonData
     polylines = new Array();
     speedArray = new Array();
+    fishingArray = new Array();
     geoJsonData = {
         type: "FeatureCollection",
         features: []
