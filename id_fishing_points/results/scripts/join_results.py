@@ -47,6 +47,8 @@ for tidx, task in enumerate(tasks.itervalues()):
 
         if len(run_info["fishingArrayString"]) != len(track["timestamps"]):
             print "        BAD LENGTH %s != %s" % (len(run_info["fishingArrayString"]), len(track["timestamps"]))
+            print "clipping"
+            run_info["fishingArrayString"] = run_info["fishingArrayString"][:len(track["timestamps"])]
             continue
 
         confidence = {
