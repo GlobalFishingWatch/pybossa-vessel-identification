@@ -1,3 +1,4 @@
+from __future__ import division
 import curl
 import ujson as json
 import sys
@@ -19,6 +20,7 @@ cogsogtracks = np.load("%s_cogsog_tracks.npz" % dataset_name)["arr_0"]
 res = {}
 
 for tidx, task in enumerate(tasks.itervalues()):
+
     track_filename = "%(mmsi)s_%(year)s_%(month)s.json" % task["info"]
 
     print "Task %s of %s: %s" % (tidx, len(tasks), track_filename)
@@ -31,7 +33,7 @@ for tidx, task in enumerate(tasks.itervalues()):
         continue
 
     classifications = []
-    total_confidence = 0
+    total_confidence = []
 
     task_task_runs = [task_run for task_run in task_runs.itervalues() if task_run["task_id"] == task["id"]]
 
@@ -51,27 +53,38 @@ for tidx, task in enumerate(tasks.itervalues()):
             run_info["fishingArrayString"] = run_info["fishingArrayString"][:len(track["timestamps"])]
             continue
 
+        is_fishing = np.array([float(x) for x in run_info["fishingArrayString"]])
+        if np.sometrue(((is_fishing < 0) | (is_fishing > 1)) & (is_fishing != 2)):
+            print("values out of range, skipping", sorted(set(is_fishing)))
+            continue
+
         confidence = {
             "low_confidence": 0.5,
             "medium_confidence": 0.75,
             "high_confidence": 1.0
             }[run_info["confidence"]]
-        total_confidence += confidence
 
         if not classifications:
             classifications = [0.0] * len(run_info["fishingArrayString"])
+            total_confidence = [0.0] * len(run_info["fishingArrayString"])
 
-        for idx in xrange(0, len(run_info["fishingArrayString"])):
-            classifications[idx] += float(run_info["fishingArrayString"][idx]) * confidence
-    classifications = [classification / total_confidence for classification in classifications]
+        for idx, isf in enumerate(is_fishing):
+            if isf != 2: # 2 is "don't know"
+                classifications[idx] += isf * confidence
+                total_confidence[idx] += confidence
+
+    classifications = [(c / t if t else 2) for (c, t) in zip(classifications, total_confidence)]
+
 
     if not classifications:
         continue
 
-    classified_track = np.zeros(len(track["timestamps"]), dtype=[("timestamp", "float"), ("lat", "float"), ("lon", "float"), ("classification", "float")])
+    classified_track = np.zeros(len(track["timestamps"]), dtype=[("mmsi", "float"), ("timestamp", "float"), ("lat", "float"), ("lon", "float"), ("classification", "float")])
 
     classified_track["timestamp"][:] = [(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S") - datetime.datetime(1970, 1, 1)).total_seconds()
                                         for timestamp in track["timestamps"]]
+    classified_track["mmsi"][:] = float(task["info"]["mmsi"])
+    assert float(task["info"]["mmsi"]) == int(float(task["info"]["mmsi"]))
     classified_track["lat"][:] = track["lats"]
     classified_track["lon"][:] = track["lons"]
     classified_track["classification"][:] = classifications
