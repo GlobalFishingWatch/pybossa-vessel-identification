@@ -1,25 +1,42 @@
-import curl
+from __future__ import print_function
 import json
-import sys
-import os
+import subprocess
 
-dataset_name = sys.argv[1]
 
-with open("%s_tasks.json" % dataset_name) as f:
-    tasks = json.load(f)
+def download_tracks(dataset_name):
+    """Download PyBossa tracks from GCS
 
-tracks_dir = "%s_tracks" % dataset_name
+    Args
+    ====
+    dataset_name : str
+        name of the dataset to download tracks from.
 
-if not os.path.exists(tracks_dir):
-    os.mkdir(tracks_dir)
+    Tracks are assumed to reside in `gs://gfw-crowd/`.
 
-for idx, task in enumerate(tasks):
-    filename = "%(mmsi)s_%(year)s_%(month)s.json" % task["info"]
-    print "%s of %s: %s" % (idx, len(tasks), filename),
-    outpath = "%s/%s" % (tracks_dir, filename)
-    if not os.path.exists(outpath):
-        print 'downloading'
-        with open(outpath, "w") as f:
-            f.write(curl.Curl().get("http://storage.googleapis.com/gfw-crowd/%s" % filename))
-    else:
-        print 'pre-existing'
+    The project task list is assumed to exist at `./{datset_name}_tasks.json`
+
+    Files are downloaded to "./{datset_name}_tasks/"
+
+    """
+    with open("{}_tasks.json".format(dataset_name)) as f:
+        tasks = json.load(f)
+
+    tracks_dir = "{}_tracks".format(dataset_name)
+
+    if not os.path.exists(tracks_dir):
+        os.mkdir(tracks_dir)
+
+    sources = ["gs://gfw-crowd/{mmsi}_{year}_{month}.json".format(**t['info']) for t in tasks]
+
+    command = ['gsutil', '-m', 'cp', '-n'] + sources + [tracks_dir]
+
+    subprocess.check_output(command)
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description='Download PyBossa data')
+    parser.add_argument('project', default="id_fishing_points", nargs='?',
+                        help="project name")
+    args = parser.parse_args()
+    print(download_tracks(args.project).decode('utf8'))
