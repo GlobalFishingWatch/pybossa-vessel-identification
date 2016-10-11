@@ -6,45 +6,8 @@ import datetime
 import numpy as np
 import numpy.lib.recfunctions as rec
 import logging
-
-
-# From vessel scoring currently, but moving to mussidae. import from there
-# when relocated
-def dedup_and_sort_points(points):
-    points.sort()
-    dedupped = []
-    last_key = (None, None)
-    last_fishing = None
-    for mmsi, timestamp, is_fishing in points:
-        key = (mmsi, timestamp)
-        is_fishing = None if is_fishing in (-1, 2) else is_fishing
-        if key == last_key:
-            if is_fishing != last_fishing:
-                dedupped[-1] = (mmsi, timestamp, None)
-        else:
-            dedupped.append((mmsi, timestamp, is_fishing))
-            last_key = key
-            last_fishing = is_fishing
-
-    return dedupped
-
-
-def ranges_from_points(points):
-    points = dedup_and_sort_points(points)
-    current_state = None
-    current_mmsi = None
-    ranges = []
-    for mmsi, time, state in points:
-        if mmsi != current_mmsi or state != current_state:
-            if current_state is not None:
-                ranges.append((current_mmsi, range_start.isoformat(), last_time.isoformat(), current_state))
-            current_state = state
-            range_start = time
-            current_mmsi = mmsi
-        last_time = time
-    if current_state is not None:
-        ranges.append((current_mmsi, range_start.isoformat(), last_time.isoformat(), current_state))
-    return ranges
+from mussidae import time_range_tools as trtools
+import download_tracks
 
 
 def extract_ranges(dataset_name):
@@ -66,7 +29,7 @@ def extract_ranges(dataset_name):
             with open("%s_tracks/%s" % (dataset_name, track_filename)) as f:
                 track = json.load(f)
         except Exception as e:
-            logging.warning('could not load {}\n{}'.format(track_filename, repr(e)))
+            logging.warning('could not load {} ({})'.format(track_filename, repr(e)))
             continue
 
         classifications = []
@@ -86,8 +49,7 @@ def extract_ranges(dataset_name):
                 continue
 
             if len(run_info["fishingArrayString"]) != len(track["timestamps"]):
-                logging.warning("        BAD LENGTH %s != %s" % (len(run_info["fishingArrayString"]), len(track["timestamps"])))
-                logging.warning("clipping")
+                logging.warning("bad length, clipping (%s != %s)" % (len(run_info["fishingArrayString"]), len(track["timestamps"])))
                 run_info["fishingArrayString"] = run_info["fishingArrayString"][:len(track["timestamps"])]
                 continue
 
@@ -117,15 +79,15 @@ def extract_ranges(dataset_name):
         mmsi = [task["info"]["mmsi"]] * len(classifications)
         states = [(c / t if t else -1) for (c, t) in zip(classifications, total_confidence)]
 
-        times = [datetime.datetime.strptime(ts, "%Y-%m-%d %H:%M:%S") for ts in track["timestamps"]]
+        times = [trtools.parse_timestamp(ts) for ts in track["timestamps"]]
 
 
-        points = list(zip(mmsi, times, states))
+        points = [trtools.Point(*args) for args in zip(mmsi, times, states)]
 
         for _, _, s in points:
             assert 0 <= s <= 1 or s == -1
 
-        ranges.extend(ranges_from_points(points))
+        ranges.extend(trtools.ranges_from_points(points))
 
     return ranges
 
@@ -140,11 +102,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract fishing/nonfishing ranges from PyBossa data')
     parser.add_argument('project', default="id_fishing_points", nargs='?',
                         help="project name")
+    parser.add_argument('--download', action="store_true",
+                        help="download track data")
     args = parser.parse_args()
-    results = extract_ranges(args.project)
-
-    with open("{}_ranges.csv".format(args.project), 'w') as f:
-        f.write("mmsi,start_time,end_time,is_fishing\n")
-        for row in results:
-            f.write("{}\n".format(','.join(str(x) for x in row)))
+    #
+    if args.download:
+        download_tracks.download_tracks(args.project)
+    ranges = extract_ranges(args.project)
+    trtools.write_ranges(ranges, "{}_ranges.csv".format(args.project))
 
