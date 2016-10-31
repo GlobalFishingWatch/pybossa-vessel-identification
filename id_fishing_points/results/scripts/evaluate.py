@@ -2,7 +2,7 @@
 
 For example:
 
-    python scripts/compare_users.py \
+    python scripts/evaluate.py \
          --classes ../../../mussidae/mussidae/data-precursors/time-range-sources/non-public-sources/mmsi_to_vessel_type.csv \
          id_fishing_points_3
 
