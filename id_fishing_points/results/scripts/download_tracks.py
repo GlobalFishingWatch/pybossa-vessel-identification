@@ -27,7 +27,8 @@ def download_tracks(dataset_name):
     if not os.path.exists(tracks_dir):
         os.mkdir(tracks_dir)
 
-    sources = ["gs://gfw-crowd/{mmsi}_{year}_{month}.json".format(**t['info']) for t in tasks]
+    sources = ["gs://gfw-crowd/{mmsi}_{year}_{month}.json".format(**t['info'])
+               for t in tasks]
 
     command = ['gsutil', '-m', 'cp', '-n'] + sources + [tracks_dir]
 
@@ -37,7 +38,7 @@ def download_tracks(dataset_name):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Download PyBossa data')
-    parser.add_argument('project', default="id_fishing_points", nargs='?',
-                        help="project name")
+    parser.add_argument(
+        'project', default="id_fishing_points", nargs='?', help="project name")
     args = parser.parse_args()
     print(download_tracks(args.project).decode('utf8'))
