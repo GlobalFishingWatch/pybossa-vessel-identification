@@ -1,3 +1,16 @@
+"""Evaluate how closely users agree on rating points as fishing or nonfishing
+
+For example:
+
+    python scripts/compare_users.py \
+         --classes ../../../mussidae/mussidae/data-precursors/time-range-sources/non-public-sources/mmsi_to_vessel_type.csv \
+         id_fishing_points_3
+
+
+
+
+"""
+
 from __future__ import division
 from __future__ import print_function
 import ujson as json
@@ -26,6 +39,8 @@ def compare_users(dataset_name, n_worst, class_map):
     std_dev_map = defaultdict(list)
 
     gear_map = {}
+    all_mmsi = set()
+
 
     for tidx, task in enumerate(tasks.values()):
         gear_map[task['info']['mmsi']] = task['info']['vesselType']
@@ -84,6 +99,8 @@ def compare_users(dataset_name, n_worst, class_map):
             values.append(is_fishing)
 
         values = np.transpose(values)
+        #
+        all_mmsi.add(task["info"]["mmsi"])
         # Standardize on -1 as missing
         values[values == 2] = -1
         # Remove all points that were not classified by at least two people
@@ -155,6 +172,8 @@ def compare_users(dataset_name, n_worst, class_map):
             print(m, std_dev_for_mmsi[m], agreement_for_mmsi[m], gear_map[m])
         print()
 
+    print("Total number of MMSI processed", len(all_mmsi))
+    print("Total number of MMSI processed by more than one person", len(agreement_for_mmsi))
     # print("Mean stddev over MMSI: ", np.mean(std_dev_for_mmsi.values()))
     count = 0
     total_aggr = 0
