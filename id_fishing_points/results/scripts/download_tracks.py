@@ -1,7 +1,7 @@
 from __future__ import print_function
+import os
 import json
 import subprocess
-import os
 
 
 def download_tracks(dataset_name):
