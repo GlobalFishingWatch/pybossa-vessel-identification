@@ -86,7 +86,11 @@ def extract_ranges(dataset_name):
             continue
 
         mmsi = [task["info"]["mmsi"]] * len(classifications)
-        states = [(c / t if t else -1)
+        # states = [(c / t if t else -1)
+        #           for (c, t) in zip(classifications, total_confidence)]
+
+        # Only dump states that at least two people rated and we have some agreement
+        states = [(c / t if (t > 1 and c / t != 0.5) else -1)
                   for (c, t) in zip(classifications, total_confidence)]
 
         times = [trtools.parse_timestamp(ts) for ts in track["timestamps"]]
@@ -114,4 +118,4 @@ if __name__ == "__main__":
     if args.download:
         download_tracks.download_tracks(args.project)
     ranges = extract_ranges(args.project)
-    trtools.write_ranges(ranges, "{}_ranges.csv".format(args.project))
+    trtools.write_ranges(sorted(ranges), "{}_ranges.csv".format(args.project))

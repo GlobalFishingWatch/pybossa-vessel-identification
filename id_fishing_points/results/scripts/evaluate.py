@@ -65,7 +65,7 @@ def inferred_accuracy(agreement):
     return 0.5 * (1 + np.sqrt(1 - 2 * (1 - agreement)))
 
 
-def compare_users(dataset_name, n_worst, class_map):
+def compare_users(dataset_name, n_worst, class_map, ignore_ties):
 
     with open("%s_tasks.json" % dataset_name) as f:
         tasks = {task["id"]: task for task in json.load(f)}
@@ -82,6 +82,10 @@ def compare_users(dataset_name, n_worst, class_map):
     gear_map = {}
     all_mmsi = set()
     task_count = 0
+    total_used_points = 0
+    total_classified_points = 0
+    total_points = 0
+    ties = 0
 
     for tidx, task in enumerate(tasks.values()):
         gear_map[task['info']['mmsi']] = task['info']['vesselType']
@@ -149,8 +153,12 @@ def compare_users(dataset_name, n_worst, class_map):
         all_mmsi.add(task["info"]["mmsi"])
         # Standardize on -1 as missing
         values[values == 2] = -1
+        total_points += len(values)
+        #
+        how_many_classified = (values != -1).sum(axis=1)
+        total_classified_points += (how_many_classified >= 1).sum()
         # Remove all points that were not classified by at least two people
-        enough_ratings = ((values != -1).sum(axis=1) >= 2)
+        enough_ratings = (how_many_classified >= 2)
         #
         #
         values = values[enough_ratings]
@@ -174,6 +182,17 @@ def compare_users(dataset_name, n_worst, class_map):
         # Pairwise agreement
         agreement = a * (a - 1) + b * (b - 1)
         pairs = n * (n - 1.0)
+        if args.ignore_ties:
+            # Throw out values with complete disagreement
+            # This is to match what we do on extract
+            mask = (agreement / pairs != 0.5)
+            ties += len(mask) - mask.sum()
+            a = a[mask]
+            b = b[mask]
+            n = n[mask]
+            agreement = agreement[mask]
+            pairs = pairs[mask]
+        total_used_points += len(a)
         # Consensus agreement  
         consensus = np.where(a > b, a, b)
         # We consider it a consensus if more than half of the raters agree
@@ -228,6 +247,14 @@ def compare_users(dataset_name, n_worst, class_map):
     print("Total number of Tasks", len(tasks))
     print("Total number of MMSI processed", len(all_mmsi))
     print("Total number of MMSI processed by more than one person", len(agreement_for_mmsi))
+    print("Total classified points {} out of {} total points ({:.2f}%)".format(
+        total_classified_points, total_points, 100 * total_classified_points / total_points))
+    print("Total number of points used {} out of {} total points  ({:.2f}%)".format(
+        total_used_points, total_points, 100 * total_used_points / total_points))
+    if ignore_ties:
+        print("Total number of ties ignored {} out of {} total points  ({:.2f}%)".format(
+            total_used_points, total_points, 100 * ties / total_points))
+    print()
     # print("Mean stddev over MMSI: ", np.mean(std_dev_for_mmsi.values()))
     count = 0
     pairs_count = 0
@@ -284,6 +311,8 @@ if __name__ == "__main__":
         '--classes', required=True, help="file mapping mmsi to classes")
     parser.add_argument(
         '--worst', type=int, default=0, help="number of worst MMSI to print")
+    parser.add_argument(
+        '--ignore-ties', action='store_true', help='ignore tied classifications to match extracted data')
     args = parser.parse_args()
     #
 
@@ -293,4 +322,4 @@ if __name__ == "__main__":
         reader =  csv.DictReader(f) 
         class_map = {float(x['mmsi']): x['label'] for x in reader if x['label']}
 
-    compare_users(args.project, args.worst, class_map)
+    compare_users(args.project, args.worst, class_map, args.ignore_ties)
