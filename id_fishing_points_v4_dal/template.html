@@ -1,0 +1,928 @@
+
+<div class="row skeleton">
+<!-- Start Skeleton Row-->
+<div class="col-md-6 ">
+   <!-- Start of Question and Submission DIV (column) -->
+   <h1 id="question">
+      <div id="vessel-title"></div>
+   </h1>
+   <div id="availableDates"><span id="currentMonth"></span></div>
+</div>
+<div id="vessel_map" style="height:500px;width=100%">
+   <div id="loadingText" ></div>
+   <div id = "pointSelectionForm">
+      <form>
+         <input type="radio" id="likelyfishingbutton" name="browser" onclick="check(this.value)" checked=true value="fishing"> Likely Fishing
+         <img src="http://storage.googleapis.com/gfw-crowd/fishing.png"  style="width:27px;height: 14px;"> <br>
+         <input type="radio" name="browser" onclick="check(this.value)" value="notFishing"> Likely Not Fishing
+         <img src="http://storage.googleapis.com/gfw-crowd/notfishing.png"  style="width:27px;height: 14px;"><br>
+<!--          <input type="radio" name="browser" onclick="check(this.value)" value="opposite"> Opposite<br>
+ -->         <input type="radio" name="browser" onclick="check(this.value)" value="dontKnow"> Unlabeled / Don't Know
+             <img src="http://storage.googleapis.com/gfw-crowd/unknown.png"  style="width:27px;height: 14px;"><br>
+      </form>
+   </div>
+</div>
+<div id="bottomcontainer">
+   <div id="speedChart"></div>
+   <div id='sliderContainer'>
+      <div id="slider"></div>
+   </div>
+
+</div>
+<div id="speedChart2"></div>
+Slow Speed Cutoff: <input type="text" class="slowSpeed" data-index="0" value="0" />
+Fast speed Cutoff: <input type="text" class="fastSpeed" data-index="1" value="30" />
+<div id="histogram"></div>
+<div id="histogramImage"></div>
+
+<!--Link to Marine Traffic -->
+<div style="color:black;font-size:17px;">
+<!--    <h1>How confident do you feel in your labeling of fishing?</h1>
+   <form>
+      <input type="radio" name="confidence" value="high_confidence" id="high_confidence" > High Confidence<br>
+      <input type="radio" name="confidence" value="low_confidence" id="low_confidence" > Low confidence <br>
+      <input type="radio" name="confidence" value="no_confidence" id="no_confidence" checked> Skip
+   </form> -->
+   <form>
+      Enter notes about this track here: 
+      <textarea id="text_notes" rows="1" style="width:150px" value="" autocomplete="off"></textarea>
+   </form>
+      <div id="marineTraffic" style="color:black;font-size:17px;padding-bottom:5px;"></div>
+   <div id="googleSearch" style="color:black;font-size:17px;padding-bottom:5px;"></div>
+   <button class="btn btn-success btn-answer" class="fa fa-thumbs-o-up" value='submit'> Submit!</button>
+    <button class="btn btn-success btn-answer" class="fa fa-thumbs-o-up" value='skip'> Skip </button>
+   <!-- End Success and Error Messages for the user -->
+   <!-- Success and Error Messages for the user --> 
+   <div class="row">
+      <div class="col-md-6 col-md-offset-2" style="height:50px">
+         <div id="success" class="alert alert-success" style="display:none;">
+            <a class="close">×</a>
+            <strong id="i18n_welldone">Well done!</strong> <span id="i18n_welldone_text">Your answer has been saved</span>
+         </div>
+         <div id="loading" class="alert alert-info" style="display:none;">
+            <a class="close">×</a>
+            <span id="i18n_loading_next_task">Loading next task...</span>
+         </div>
+         <div id="taskcompleted" class="alert alert-info" style="display:none;">
+            <strong id="i18n_task_completed">The task has been completed!</strong> <span id="i18n_thanks">Thanks a lot!</span>
+         </div>
+         <div id="finish" class="alert alert-success" style="display:none;">
+            <strong id="i18n_congratulations">Congratulations!</strong> <span id="i18n_congratulations_text">You have participated in all available tasks!</span>
+            <br/>
+            <div class="alert-actions">
+               <a class="btn small" href="/">Go back</a>
+               <a class="btn small" href="/app">or, Check other projects</a>
+            </div>
+         </div>
+         <div id="error" class="alert alert-danger" style="display:none;">
+            <a class="close">×</a>
+            <strong>Error!</strong> Something went wrong, please contact the site administrators
+         </div>
+      </div>
+   </div>
+   <!-- Feedback items for the user -->
+   <p><span id="i18n_working_task">You are working now on task:</span> <span id="task-id" class="label label-warning">#</span></p>
+   <p>
+      <span id="i18n_tasks_completed">You have completed:</span> <span id="done" class="label label-info"></span> <span id="i18n_tasks_from">tasks from</span>
+      <!-- Progress bar for the user -->
+      <span id="total" class="label label-info"></span>
+   </p>
+   <div class="progress progress-striped">
+      <div id="progress" rel="tooltip" title="#" class="progress-bar" style="width: 0%;"  role="progressbar"></div>
+   </div>
+   <div id="marineTrafficiFrame"></div>
+</div>
+
+
+
+<!--jquery library, D3 library, mapbox library, and mapbox stylesheet -->
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>  
+<link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css?1010' rel='stylesheet' />
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-geodesy/v0.1.0/leaflet-geodesy.js'></script>
+
+<!--external stylesheet, stored in google cloud -->
+<!-- <link href='https://storage.googleapis.com/gfw-crowd/task_assets/idtracks_pbossa.css' rel='stylesheet' /> -->
+
+<link rel="stylesheet" href="https://storage.googleapis.com/gfw-crowd/task_assets/jquery-ui-mod-ecowest2.css">
+<script src="https://storage.googleapis.com/gfw-crowd/task_assets/jquery.ui.labeledslider.js"></script>
+<link rel="stylesheet" type="text/css" href="https://storage.googleapis.com/gfw-crowd/task_assets/select_points.css" />
+
+
+<script>
+
+
+var fastSpeed = 30;
+var slowSpeed = 0;
+
+$("input.slowSpeed").change(function() {
+    var $this = $(this);
+    slowSpeed = parseFloat($this.val());//$("#slider").slider("values", $this.data("index"), $this.val());
+    points.setStyle(function(t) {
+      return styleFishing(t.properties.fishing,t['properties']['count'],t['properties']['date'] );
+    });
+
+});
+
+$("input.fastSpeed").change(function() {
+    var $this = $(this);
+    fastSpeed = parseFloat($this.val());//$("#slider").slider("values", $this.data("index"), $this.val());
+    points.setStyle(function(t) {
+      return styleFishing(t.properties.fishing,t['properties']['count'],t['properties']['date'] );
+    });
+});
+
+//global variables for the map
+var map;
+
+var col=d3.scale.linear().domain([0,20]).range(["red","blue"]);
+
+var mmsi;
+var year;
+var month;
+var month_ab = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"];
+var vesselType;
+
+var numDays;
+var leftDate;// = new Date(year,month - 1,1);
+var rightDate;// = new Date(year,month,1);
+
+var geoJson;
+var geoJsonData;
+var points;
+var polylines;
+var speedArray; 
+var fishingArray;
+
+
+var gear_codes = {"DRB":"Boat dredges",
+"DRH":"Hand dredges operating from a boat",
+"HMD":"Mechanised dredges including suction dredges",
+"GNC":"Encircling gillnets",
+"GND":"Drift nets",
+"GNS":"Set gillnets (anchored)",
+"GTN":"Combined gillnets-trammel nets",
+"GTR":"Trammel nets",
+"HAR":"Harpoons",
+"LHM":"Handlines and pole-lines (mechanised)",
+"LHP":"Handlines and pole-lines (hand operated)",
+"LLD":"Drifting longlines",
+"LLS":"Set longlines",
+"LTL":"Trolling lines",
+"LNB":"Boat-operated lift nets",
+"LNS":"Shore-operated stationary lift nets",
+"NO":"No gear",
+"SB":"Beach seines",
+"SDN":"Danish seines",
+"SPR":"Pair seines",
+"SSC":"Scottish seines",
+"LA":"Lampara nets",
+"PS":"Purse seines",
+"FPO":"Pots and Traps",
+"OTB":"Bottom otter trawls",
+"OTM":"Midwater otter trawls",
+"OTT":"Otter twin trawls",
+"PTB":"Bottom pair trawls",
+"PTM":"Midwater pair trawls",
+"TBB":"Beam trawls",
+"NK":"Unknown gear"};
+
+var polyChange = "fishing";
+
+document.getElementById( "text_notes" ).setAttribute( "autocomplete","off" );
+
+//create the map
+L.mapbox.accessToken = 'pk.eyJ1IjoiZGF2aWRrcm9vZHNtYSIsImEiOiJjaWYzZ3U1ODEycDBwczVtNWpmbTNiMzQyIn0.DbC4XPpCftqbPIJRd1xdxQ';
+map = L.mapbox.map('vessel_map', 'mapbox.streets', {scrollWheelZoom: false});
+L.control.scale().addTo(map); //add a scale
+
+//loading text -- it is set not visible once the data has loaded
+$("#loadingText").text("Loading Vessel Tracks...");
+
+
+// Add the Polygon Drawing Technology
+var featureGroup = L.featureGroup().addTo(map);  
+var drawControl = new L.Control.Draw({
+  edit: {
+    featureGroup: featureGroup
+  },
+  draw: {
+    polygon: true,
+    polyline: false,
+    rectangle: false,
+    circle: false,
+    marker: false
+  }
+}).addTo(map);
+
+map.on('draw:created', showPolygonArea);
+
+function check(checked_value){
+  polyChange = checked_value;
+  console.log(checked_value);
+}
+
+function styleFishing(fishing, speed, thedate) {
+    if (thedate>= leftDate && thedate<= rightDate && speed >= slowSpeed && speed <= fastSpeed) {
+        if(fishing==1) {
+            var style = {
+                fillColor: col(speed),
+                color: 'black',
+                radius: 4,
+                opacity: 1,
+                fillOpacity: .5
+            }
+        } else if(fishing==0){
+            var style = {
+                fillColor: col(speed),
+                color: 'green',
+                radius: 4,
+                opacity: 1,
+                fillOpacity: 0
+            }
+        } else if(fishing==2){
+            var style = {
+                radius: 2,
+                color: col(speed),
+                fillColor: col(speed),
+                opacity: 1,
+                fillOpacity: 1
+            };
+        }
+    }else {
+        var style = {
+            opacity: 0,
+            fillOpacity: 0
+        };
+    }
+    return style;
+}
+
+function showPolygonArea(e) {
+    featureGroup.clearLayers();
+    // console.log(e.layer);
+    var polygon = new Array();
+    for (var j = 0; j < e.layer._latlngs.length; j++) {
+        polygon.push([e.layer._latlngs[j].lng, e.layer._latlngs[j].lat]);
+    }
+    featureGroup.addLayer(e.layer);
+    //e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
+    //e.layer.openPopup();
+    points.setStyle(function(t) {
+        if (t['properties']['date']>= leftDate && t['properties']['date']<= rightDate 
+          && t['properties']['count'] >= slowSpeed && t['properties']['count']  <= fastSpeed) {
+            // console.log(t);
+            var lon = t.geometry.coordinates[0];
+            var lat = t.geometry.coordinates[1];
+            if (featureGroup.getBounds().contains(L.latLng(lat, lon)) && inside([lon, lat], polygon)) {
+                
+                if (polyChange == 'opposite') {
+                    if (t.properties.fishing ==1){t.properties.fishing=0;}
+                    else if (t.properties.fishing ==0){t.properties.fishing=1;}
+                } else if (polyChange == 'dontKnow') {
+                   t.properties.fishing  = 2;
+                } else if (polyChange == 'fishing') {
+                    t.properties.fishing = 1;
+                } else if (polyChange == 'notFishing') {
+                    t.properties.fishing = 0;
+                }
+                fishingArray[t.properties.order] = t.properties.fishing;
+            }
+        }
+        console.log(t.properties.fishing);
+        style = styleFishing(t.properties.fishing, t['properties']['count'],t['properties']['date']);
+        return (style);
+    })
+    featureGroup.removeLayer(e.layer);
+    makeSpeedChart2(leftDate, rightDate);
+    makeSpeedChart1();
+}
+//loading text -- it is set not visible once the data has loaded
+$("#loadingText").text("Loading Vessel Tracks...");
+$("#pointSelectionForm").attr('style', 'z-index: 10000; top: 140px;  left: 100px;  margin-top: -30px;  margin-left: -100px;  background-color: #333333;  position: absolute;  padding: 6px;  opacity: .8;  color:white; font-size: 13px;');
+
+
+// Default language
+var userLocale = "en";
+
+// Update userLocale with server side information
+ $(document).ready(function(){
+     userLocale = document.getElementById('PYBOSSA_USER_LOCALE').textContent.trim();
+});
+
+function loadUserProgress() {
+    pybossa.userProgress('id_fishing_points_4_dal').done(function(data){
+        var pct = Math.round((data.done*100)/data.total);
+        $("#progress").css("width", pct.toString() +"%");
+        $("#progress").attr("title", pct.toString() + "% completed!");
+        $("#progress").tooltip({'placement': 'left'}); 
+        $("#total").text(data.total);
+        $("#done").text(data.done);
+    });
+}
+
+
+pybossa.presentTask(function(task, deferred) {
+    document.getElementById( "text_notes" ).value = "";
+    if ( !$.isEmptyObject(task) ) {
+        loadUserProgress();
+        // i18n_translate(); // no need to translate the messages
+        $('#task-id').html(task.id);
+
+        //get the task info
+        mmsi = task.info.mmsi;
+        year = task.info.year;
+        month = task.info.month;
+        vesselType = task.info.vesselType;
+
+        if(vesselType in gear_codes){
+          vesselType = gear_codes[vesselType];
+        }
+
+        console.log(task);
+
+        //update the Marine Traffic links
+        var href = "http://www.marinetraffic.com/en/ais/details/ships/"+mmsi;
+        $("#marineTraffic").html("Look this vessel up on <a href='"+href+"' target='_blank'>Marine Traffic</a>");
+
+        $("#vessel-title").text("Vessel " + mmsi + " "+vesselType +", " + month_ab[parseInt(month) - 1] + " " + year.toString());
+
+        //Marine Traffic iframe -- commented out for this version
+        //$("#marineTrafficiFrame").html("<iframe src='"+href+"' width=100% height = 2000 px></iframe>");
+       
+        //update the search on Google
+        var google_href = "http://www.google.com/search?q=mmsi+"+mmsi.toString();
+         $("#googleSearch").html("Search for this mmsi <a href='"+google_href+"' target='_blank'>on Google</a>");
+
+        //update histogram image
+        $("#histogramImage").html("<img src='http://storage.googleapis.com/gfw-crowd/histogram/"+mmsi+".png'>");
+
+        drawtracks(mmsi, year, month);
+
+        $('.btn-answer').off('click').on('click', function(evt) {
+
+
+            var confidence = $(this).attr("value");
+
+            text_notes = $("#text_notes").val();
+            answer_string = '{"mmsi":"'+mmsi.toString()+'","vesselType":"'+vesselType+'","text_notes":"'+text_notes+'",';
+            answer_string += '"confidence":"'+ confidence +'","fishingArrayString":"'+ fishingArrayString() + '"}';
+            console.log("the answer string is: "+answer_string);
+            pybossa.saveTask(task.id, answer_string).done(function() {
+                deferred.resolve();
+                console.log('saving task');
+            });
+            $("#loading").fadeIn(500);
+        });
+        $("#loading").hide();
+    }
+    else {
+        $(".skeleton").hide();
+        $("#loading").hide();
+        $("#finish").fadeIn(500);
+    }
+});
+
+pybossa.run('id_fishing_points_4_dal');
+
+function drawtracks(mmsi, year, month) {
+    //scroll to the top
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    //update the startdates and the number of days
+    startdate = new Date(parseInt(year), parseInt(month) - 1, 1);
+    if (startdate.getMonth() < 11) {
+        enddate = new Date(parseInt(year), parseInt(month), 1);
+    } else {
+        enddate = new Date(parseInt(year) + 1, 0, 1);
+    }
+    leftDate = startdate; //assign these values
+    rightDate = enddate;
+
+    var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    numDays = Math.round(Math.abs((startdate.getTime() - enddate.getTime()) / (oneDay)));
+
+    //remove points and lines that are already there 
+    if (points) {
+        map.removeLayer(points);
+    }
+    if (polylines) {
+        for (var j = 0; j < polylines.length; j++) {
+            map.removeLayer(polylines[j])
+        };
+    }
+    //zero and initialize the polylines, speedArray, and geoJsonData
+    polylines = new Array();
+    speedArray = new Array();
+    fishingArray = new Array();
+    geoJsonData = {
+        type: "FeatureCollection",
+        features: []
+    };
+
+    //turn the loading text visible and centered over the map
+    $("#loadingText").attr('style', 'z-index: 10000; top: 270px;  left: 50%;  margin-top: -30px;  margin-left: -100px;  background-color: #333333;  position: absolute;  padding: 6px;  opacity: .8;  color:white; font-size: 13px;');
+
+    //get the appropriate json file from google cloud storage, and then populated the map
+    // console.log("loading file " + 'http://storage.googleapis.com/gfw-crowd/' + mmsi + "_" + (year).toString() + "_" + (month).toString() + ".json");
+    $.getJSON('http://storage.googleapis.com/gfw-crowd/'+mmsi+"_"+(year).toString()+"_"+(month).toString()+".json", function(response){
+    // $.getJSON('./vessels/'+ mmsi + "_" + (year).toString() + "_" + (month).toString() + ".json", function(response) {
+        line = response;
+        console.log(line);
+        lats = line['lats'];
+        lons = line['lons'];
+        sogs = line['sogs'];
+        timestamps = line['timestamps'];
+
+        for (var i = 0; i < lats.length; i++) {
+              d = timestamps[i].split(" ")[0].split("-");
+              hs = timestamps[i].split(" ")[1].split(":");
+              d = new Date(d[0], parseInt(d[1]) - 1, d[2], hs[0], hs[1], hs[2]);
+
+              geoJsonData.features.push({
+                  type: 'Feature',
+                  properties: {
+                      // The important part is here: that each feature has some property
+                      // that we refer to later on, in `pointToLayer`, that determines
+                      // the size of the scaled circle.
+                      count: sogs[i],
+                      order: i,
+                      fishing: 2, // all points start out as 2, which is unknown / not sure
+                      "popupContent": "mmsi: " + mmsi + "<br>" + timestamps[i] + "<br>speed: " + sogs[i].toString(),
+                      date: d
+                  },
+                  geometry: {
+                      type: 'Point',
+                      coordinates: [lons[i], lats[i]]
+                  }
+              });
+
+              fishingArray[i] = 2;
+
+              //This draws many individual lines instead of one long one. The reason is so that we can avoid 
+              //the international dateline challebges, and so that we can turn them off one at a time with the slider
+              if (i > 0) {
+                  if ((lons[i] > 90 && lons[i - 1] < -90) || (lons[i - 1] > 90 && lons[i] < -90)) {} else {
+                      polylines.push(L.polyline([
+                          [lats[i], lons[i]],
+                          [lats[i - 1], lons[i - 1]]
+                      ], {
+                          color: 'black',
+                          opacity: 1,
+                          weight: 1,
+                          date: d
+                      }));
+                  }
+              }
+              if(1){//} (sogs[i] < 80) { //sometimes it registers 100 knots, which is obviously not a real value
+                  speedArray.push({
+                      date: d,
+                      close: sogs[i],
+                      order: i
+                  });
+              }
+        }
+
+        //add all the lines to the map
+        for (var j = 0; j < polylines.length; j++) {
+            polylines[j].addTo(map)
+        };
+
+        //add all the points to the map
+        points = L.geoJson(geoJsonData, {
+            pointToLayer: function(feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 2,
+                        color: col(feature.properties.count),
+                        fillColor: col(feature.properties.count),
+                        opacity: 1,
+                        fillOpacity: 1
+                    })
+                } //,
+                // onEachFeature: onEachFeature
+        }).addTo(map);
+
+
+        points.on('click', function(e) {
+            console.log(e.layer);
+            console.log(geoJsonData.features[0]);
+            console.log(e.layer.feature.properties.order);
+            console.log(e.layer.feature.properties.fishing);
+
+            e.layer.feature.properties.fishing = (e.layer.feature.properties.fishing + 1) % 3;
+            fishingArray[e.layer.feature.properties.order] = e.layer.feature.properties.fishing 
+            style = styleFishing(e.layer.feature.properties.fishing, e.layer.feature.properties['count'],e.layer.feature.properties['date']);
+            e.layer.setStyle(style);
+
+            makeSpeedChart2(leftDate, rightDate);
+            makeSpeedChart1();
+
+        });
+
+        //zoom map to the bounds of all the points. Note that this isn't great when the 
+        //vessel crosses the international dateline
+        map.fitBounds(points.getBounds());
+        $("#loadingText").attr('style', 'visibility: hidden');
+        //make the histogram of the data and the speed chart and slider
+        makeD3SpeedChart();
+        //makeHistogram(startdate,enddate); 
+        makeSpeedChart2(startdate, enddate);
+
+    });
+}
+
+
+function makeD3SpeedChart() {
+    //make the slider
+    $(function() {
+        $('#slider').slider({
+            max: numDays,
+            min: 0,
+            values: [0, numDays],
+            animate: "fast",
+            stop: function(event, ui) {
+                leftSlider = Math.min(ui.values[0], ui.values[1]);
+                rightSlider = Math.max(ui.values[0], ui.values[1]);
+                leftDate = numToDate(leftSlider);
+                rightDate = numToDate(rightSlider);
+                points.setStyle(function(t) {
+                    return styleFishing(t.properties.fishing,t['properties']['count'],t['properties']['date'] );
+                });
+
+                for (var i = 0; i < polylines.length; i++) {
+                    if (polylines[i]['options']['date'] >= leftDate && polylines[i]['options']['date'] <= rightDate) {
+                        style = {
+                            color: 'black',
+                            opacity: 1,
+                            weight: 1
+                        };
+                    } else {
+                        style = {
+                            opacity: 0,
+                            fillOpacity: 0
+                        };
+                    }
+                    polylines[i].setStyle(style);
+                }
+                //makeHistogram(leftDate,rightDate);  
+                makeSpeedChart2(leftDate, rightDate);
+                makeSpeedChart1();
+            }
+        });
+    });
+    makeSpeedChart1();
+}
+
+
+function makeSpeedChart1(){
+    //remove any svg that is already there -- this is important when it loads a second task!
+    d3.select("#speedChart svg").remove();
+
+    var margin = {
+            top: 5,
+            right: 0,
+            bottom: 30,
+            left: 40
+        },
+        width = parseInt(d3.select('#speedChart').style('width'), 10),
+        width = width - margin.left - margin.right,
+        height = 120 - margin.top - margin.bottom;;
+
+    // Set the ranges
+    var x = d3.time.scale().range([0, width]);
+    var y = d3.scale.linear().range([height, 0]);
+
+    // Define the axes
+    var xAxis = d3.svg.axis().scale(x)
+        .orient("bottom").ticks(10)
+        .tickFormat(d3.time.format("%-m/%-d"));
+
+    var yAxis = d3.svg.axis().scale(y)
+        .orient("left").ticks(5);
+
+    // Define the line
+    var valueline = d3.svg.line()
+        .x(function(d) {
+            return x(d.date);
+        })
+        .y(function(d) {
+            return y(d.close);
+        });
+
+    // Adds the svg canvas
+    var svg = d3.select("#speedChart")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+    data = speedArray; //use the speedArray we created earlier
+    // Scale the range of the data
+    x.domain([startdate, enddate]); //d3.extent(data, function(d) { return d.date; }));
+
+    y.domain([0, Math.min(20, d3.max(data, function(d) {
+        return d.close;
+    }))]);
+
+    // Add the valueline path.
+    svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(data));
+
+    // Add the scatterplot
+    svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .attr("r", 3.5)
+        .attr("cx", function(d) {
+            return x(d.date);
+        })
+        .attr("cy", function(d) {
+            return y(d.close);
+        })
+        .style("fill", function(d) {
+            if (fishingArray[d.order]==1){ return('#000000');}
+            else if (fishingArray[d.order]==0) {return 'green'}
+            else {return col(d.close)};
+        })
+        .style("stroke", function(d) {
+            if (fishingArray[d.order]==1){ return('#000000');}
+            else if (fishingArray[d.order]==0) {return 'green'}
+            else {return col(d.close)};
+        });
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.append("text")
+        .attr("text-anchor", "middle") // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("class", "axesLabels")
+        .attr("transform", "translate(" + "-24" + "," + (height / 2) + ")rotate(-90)") // text is drawn off the screen top left, move down and out and rotate
+        .text("Speed in Knots");
+}
+
+
+function makeSpeedChart2(sdate, edate) {
+    d3.select("#speedChart2 svg").remove();
+
+    //if there is no data between the dates, don't do anything
+    var count = 0;
+    for (var i = 0; i < speedArray.length; i++) {
+        if (speedArray[i]['date'] < sdate || speedArray[i]['date'] > edate) {
+            count++;
+        }
+    }
+    if (count == speedArray.length) {
+        return;
+    }
+    var data = speedArray;
+
+
+    var margin = {
+            top: 5,
+            right: 0,
+            bottom: 30,
+            left: 40
+        },
+        width = parseInt(d3.select('#speedChart2').style('width'), 10),
+        width = width - margin.left - margin.right,
+        height = 100 - margin.top - margin.bottom;;
+
+    // Set the ranges
+    var x = d3.time.scale().range([0, width]);
+    var y = d3.scale.linear().range([height, 0]);
+
+    // Define the axes
+    var xAxis = d3.svg.axis().scale(x)
+        .orient("bottom").ticks(10);
+    // .tickFormat(d3.time.format("%-m/%-d"));
+
+    var yAxis = d3.svg.axis().scale(y)
+        .orient("left").ticks(5);
+
+    // Define the line
+    var valueline = d3.svg.line()
+        .x(function(d) {
+            return x(d.date);
+        })
+        .y(function(d) {
+            return y(d.close);
+        });
+
+    // Adds the svg canvas
+    var svg = d3.select("#speedChart2")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+    x.domain([sdate, edate]); //d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, Math.min(20, d3.max(data, function(d) {
+        return d.close;
+    }))]);
+
+    // Add the valueline path.
+    svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(data))
+        .style("fill", "none");
+
+    // Add the scatterplot
+    svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .attr("r", 3.5)
+        .attr("cx", function(d) {
+            return x(d.date);
+        })
+        .attr("cy", function(d) {
+            return y(d.close);
+        })
+        .style("fill", function(d) {
+            if (fishingArray[d.order]==1){ return('#000000');}
+            else if (fishingArray[d.order]==0) {return 'green'}
+            else {return col(d.close)};
+        })
+        .style("stroke", function(d) {
+            if (fishingArray[d.order]==1){ return('#000000');}
+            else if (fishingArray[d.order]==0) {return 'green'}
+            else {return col(d.close)};
+        });
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .style("stroke-width", "1");
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.append("text")
+        .attr("text-anchor", "middle") // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("class", "axesLabels")
+        .attr("transform", "translate(" + "-24" + "," + (height / 2) + ")rotate(-90)") // text is drawn off the screen top left, move down and out and rotate
+        .text("Speed in Knots");
+
+}
+
+
+function makeHistogram(sdate, edate) {
+
+    //remove any data that was there before
+    d3.select("#histogram svg").remove();
+
+    var count = 0;
+    for (var i = 0; i < speedArray.length; i++) {
+        if (speedArray[i]['date'] < sdate || speedArray[i]['date'] > edate) {
+            count++;
+        }
+    }
+    if (count == speedArray.length) {
+        return;
+    }
+
+    var values = d3.range(1000).map(d3.random.bates(10));
+
+    values = new Array();
+    for (var i = 0; i < speedArray.length; i++) {
+        if (speedArray[i]['date'] >= sdate && speedArray[i]['date'] <= edate) {
+            values.push(speedArray[i]['close']);
+        }
+    }
+    // A formatter for counts.
+    var formatCount = d3.format(",.0f");
+
+    var margin = {
+            top: 10,
+            right: 30,
+            bottom: 37,
+            left: 40
+        },
+        width = 800 - margin.left - margin.right,
+        height = 150 - margin.top - margin.bottom;
+
+    var x = d3.scale.linear()
+        .domain([0, Math.max.apply(Math, values)])
+        .range([0, width]);
+
+    // Generate a histogram using twenty uniformly-spaced bins.
+    var data = d3.layout.histogram()
+        .bins(x.ticks(20))
+        (values);
+
+    var y = d3.scale.linear()
+        .domain([0, d3.max(data, function(d) {
+            return d.y;
+        })])
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var svg = d3.select("#histogram").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var bar = svg.selectAll(".bar")
+        .data(data)
+        .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) {
+            return "translate(" + x(d.x) + "," + y(d.y) + ")";
+        });
+
+    bar.append("rect")
+        .attr("x", 1)
+        .attr("width", x(data[0].dx) - 1)
+        .attr("height", function(d) {
+            return height - y(d.y);
+        })
+        .style("fill", function(d) {
+            return col(d.x)
+        });
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+
+    svg.append("text")
+        .attr("text-anchor", "middle") // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("class", "axesLabels")
+        .attr("transform", "translate(" + "-15" + "," + (height / 2) + ")rotate(-90)") // text is drawn off the screen top left, move down and out and rotate
+        .text("Frequency");
+
+    svg.append("text")
+        .attr("text-anchor", "middle") // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("class", "axesLabels")
+        .attr("transform", "translate(" + width / 2 + "," + (height + margin.top + margin.bottom - 12) + ")") // text is drawn off the screen top left, move down and out and rotate
+        .text("Speed in Knots");
+}
+
+// function onEachFeature(feature, layer) {
+//     // does this feature have a property named popupContent?
+//     if (feature.properties && feature.properties.popupContent) {
+//         layer.bindPopup(feature.properties.popupContent);
+//     }
+// }
+
+function numToDate(num) {
+    var someDate = new Date(startdate.getTime());
+    someDate.setDate(startdate.getDate() + num);
+    console.log(someDate);
+    console.log(num);
+    return (someDate);
+}
+
+
+
+function fishingArrayString(){
+  var output = ''
+  for(var i = 0;i< fishingArray.length;i++){
+    output += fishingArray[i].toString();
+  }
+  return output;
+}
+
+function inside(point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    var x = point[0],
+        y = point[1];
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0],
+            yi = vs[i][1];
+        var xj = vs[j][0],
+            yj = vs[j][1];
+
+        var intersect = ((yi > y) != (yj > y)) &&
+            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    return inside;
+};
+
+</script>

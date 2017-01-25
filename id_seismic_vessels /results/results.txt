@@ -1,0 +1,185 @@
+563740000	disagree	Research_Survey	Tug_Pilot_Supply	Research_Survey
+503094000	Passenger	Passenger	Passenger	Passenger
+236403000	disagree	Research_Survey	Research_Survey	Seismic_Vessel
+412753740	disagree	Longliner	Fishing	fishing
+367362580	disagree	fishing	Trawler	Fishing vessels
+412201729	disagree	fishing	Fishing	Longliner
+352205000	disagree	Tug_Pilot_Supply	safety standby	Standby safety vessel
+236585000	disagree	not_known	Research_Survey	not_enough_info
+233659000	disagree	Trawler	Passenger	Trawler
+219020398	disagree	not_enough_info	Seismic_Vessel	Tug_Pilot_Supply
+232555000	disagree	Trawler	Research_Survey	Trawler
+273523300	disagree	Trawler	Fishing	Trawler
+419098600	disagree	not_enough_info	Seismic_Vessel	Seismic_Vessel
+352274000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+431100381	disagree	Seismic_Vessel	not_enough_info	Seismic_Vessel
+259645000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+357767000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+352925000	disagree	Sail	Seismic_Vessel	Seismic_Vessel
+248219000	disagree	Tug_Pilot_Supply	Research_Survey	Tug_Pilot_Supply
+370580000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+236384000	disagree	Tug_Pilot_Supply	not_known	Tug_Pilot_Supply
+352629000	disagree	Research_Survey	not_enough_info	Research_Survey
+212966000	disagree	not_known	Research_Survey	Seismic_Vessel
+412329653	disagree	fishing	Fishing	Longliner
+273848910	disagree	Trawler	Trawler	not_enough_info
+210624000	disagree	Seismic_Vessel	Seismic_Vessel	Research_Survey
+273212110	Trawler	Trawler	Trawler	Trawler
+553111745	disagree	Landing Craft	Cargo_Tanker	Cargo_Tanker
+367059880	disagree	Research_Survey	Research_Survey	Seismic_Vessel
+273366690	disagree	Trawler	Fishing Vessel
+367056202	disagree	Seismic_Vessel	Special vessel	Seismic_Vessel
+316020186	disagree	Seismic_Vessel	not_enough_info	Research_Survey
+311012300	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+257908000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+308246000	disagree	not_known	Safety vessel	not_enough_info
+273843020	disagree	Trawler	not_enough_info	Trawler
+740336000	Trawler	Trawler	Trawler	Trawler
+273454600	Research_Survey	Research_Survey	Research_Survey	Research_Survey
+273258100	Trawler	Trawler	Trawler	Trawler
+354791000	disagree	not_known	Multipurpose vessel	seismic support vessel
+370473000	disagree	seismic supply ship	Seismic_Vessel	Tug_Pilot_Supply
+354742000	disagree	Research_Survey	Research_Survey	seismic support
+412463898	disagree	fishing	Purse seine	Fishing
+212434000	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker
+228030800	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+273522400	disagree	Trawler	Trawler	Fishing
+236111851	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+356259000	disagree	bad_data	bad_data	not_enough_info
+518100036	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply
+228045800	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+212835000	disagree	Cargo_Tanker	not_enough_info	Cargo_Tanker
+257022000	disagree	Research_Survey	Seismic_Vessel	Seismic_Vessel
+311000276	disagree	Seismic_Vessel	Research_Survey	Research_Survey
+636013688	disagree	Research_Survey	Seismic_Vessel	Seismic_Vessel
+259671000	disagree	Research_Survey	Research_Survey	Seismic_Vessel
+224331000	disagree	not_enough_info	bad_data	bad_data
+271043480	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+311784000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+740356000	disagree	Fishing	Trawler	Fishing
+311781000	disagree	Seismic_Vessel	Tug	Research_Survey
+368555000	Trawler	Trawler	Trawler	Trawler
+258992000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+636015209	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker
+740338000	Trawler	Trawler	Trawler	Trawler
+636016860	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker
+236111902	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+412443687	disagree	Trawler	Longliner	fishing
+432791000	disagree	Fishing Support	Tug_Pilot_Supply	Tug_Pilot_Supply
+561003000	disagree	Cargo_Tanker	not_known	Bulk Carrier
+412420104	disagree	fishing	Longliner	Fishing
+316002080	disagree	Seismic_Vessel	Seismic_Vessel	Trawler
+419002766	disagree	Pots_and_traps	not_enough_info	Fishing
+366374970	disagree	Tug	Tug_Pilot_Supply	Tug_Pilot_Supply
+247103060	disagree	Squid fishing	fishing vessel	Fishing Vessel
+412328785	disagree	Longliner	fishing	Fishing
+576190000	disagree	Research_Survey	not_enough_info	Utility vessel
+372757000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+212593000	disagree	Research_Survey	not_enough_info	Research_Survey
+565799000	disagree	Research_Survey	Seismic_Vessel	Seismic_Vessel
+353922000	disagree	Research_Survey	seismic support vesselno wo	Seismic_Vessel
+311012200	disagree	Research_Survey	Seismic_Vessel	Seismic_Vessel
+228050600	disagree	Research_Survey	Seismic_Vessel	Seismic_Vessel
+372363000	disagree	Research_Survey	seismic support	Research_Survey
+512004025	disagree	Fishing	Longliner	fishing
+273840710	disagree	not_enough_info	Trawler	Trawler
+273350140	disagree	Research_Survey	Seismic_Vessel	Research_Survey
+533795000	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply
+311030800	disagree	Research_Survey	Seismic_Vessel	Seismic_Vessel
+431086000	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply
+338929000	disagree	vessel carrier/military ops	Tug_Pilot_Supply	Logistics
+371729000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+564542000	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply
+373881000	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply
+371235000	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+412331017	disagree	Fishing	fishing	Longliner
+228798000	not_enough_info	not_enough_info	not_enough_info	not_enough_info
+233694000	disagree	not_enough_info	Seismic_Vessel	Cargo_Tanker
+311027800	disagree	Cargo_Tanker	not_known	not_known
+316003250	disagree	Tug_Pilot_Supply	Tug	Tug_Pilot_Supply
+356742000	disagree	Cargo_Tanker	not_known	Tug_Pilot_Supply
+273526300	disagree	Fishing	Trawler	self-reported fishing vessel
+412200083	Trawler	Trawler	Trawler	Trawler
+273840020	disagree	self-reported fishing vessel	Trawler	Trawler
+312027000	disagree	Trawler	Trawler	Fish Factory Ship
+372620000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+636091926	disagree	Cargo_Tanker	not_known	Bulk Carrier
+412420965	disagree	fishing	Research_Survey	bad_data
+503363800	disagree	not_enough_info	not_known	Research_Survey
+239492000	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker
+209128000	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+341892000	disagree	Trawler	Trawler	factory trawler
+370136000	disagree	Tender	tender	Seismic_Vessel
+309593000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+273457600	disagree	Research_Survey	not_known	Seismic_Vessel
+251063000	Trawler	Trawler	Trawler	Trawler
+258739000	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+311487000	disagree	Cargo_Tanker	Cargo_Tanker	Seismic_Vessel
+311052900	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+533000966	disagree	not_enough_info	Tug_Pilot_Supply	Tug_Pilot_Supply
+311029900	disagree	Seismic_Vessel	Research_Survey	Research_Survey
+210582000	disagree	Seismic_Vessel	not_known	Seismic_Vessel
+259798000	disagree	Seismic_Vessel	Supply vessel	Tug_Pilot_Supply
+273848710	disagree	Trawler	not_enough_info	Trawler
+352926000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+412380350	disagree	Seismic_Vessel	Seismic_Vessel	Research_Survey
+311012500	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+311777000	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+273458600	Research_Survey	Research_Survey	Research_Survey	Research_Survey
+273132000	disagree	not_known	Tug_Pilot_Supply	not_known
+412420374	disagree	fishing	Longliner	Fishing
+413235000	Trawler	Trawler	Trawler	Trawler
+303628000	disagree	Pots_and_traps	Trawler	Longliner
+377697000	disagree	standby safety	Standby safety	Tug_Pilot_Supply
+503005590	disagree	not_enough_info	Tug_Pilot_Supply	Seismic_Vessel
+900016688	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker
+212168000	disagree	not_known	Fishing Vessel	Cargo_Tanker
+413005658	disagree	Trawler	not_enough_info	not_known
+236538000	disagree	Research_Survey	bad_data	not_enough_info
+636091723	disagree	Cargo_Tanker	Bulk Carrier	Trawler
+412420001	disagree	fishing	fishing vessel	Fishing
+412420488	disagree	Fishing	fishing	Longliner
+357269000	disagree	not_enough_info	Research_Survey	Research_Survey
+273454700	disagree	General cargo	Seismic_Vessel	Cargo_Tanker
+257557000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+372048000	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+366691880	Trawler	Trawler	Trawler	Trawler
+357065000	disagree	Research_Survey	Seismic_Vessel	Seismic_Vessel
+503540000	disagree	not_enough_info	Research_Survey	Seismic_Vessel
+413300120	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+224307000	disagree	Squid fishing	Trawler	not_enough_info
+366887950	disagree	Tug_Pilot_Supply	Tug	Tug_Pilot_Supply
+413771358	disagree	not_known	Trawler	Cargo_Tanker
+338815000	disagree	Tug_Pilot_Supply	vehicles carrier/marine ops	Logistics
+525018368	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker	Cargo_Tanker
+512003936	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply
+357149000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+226022000	disagree	Seismic_Vessel	Seismic_Vessel	Research_Survey
+412443949	disagree	Trawler	Longliner	fishing
+574756000	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+273240700	Trawler	Trawler	Trawler	Trawler
+273249600	Trawler	Trawler	Trawler	Trawler
+518100102	disagree	Cargo_Tanker	Bulk Carrier	Cargo_Tanker
+563786000	disagree	Tug_Pilot_Supply	Tug_Pilot_Supply	Cargo_Tanker
+419000633	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+311971000	disagree	Tug_Pilot_Supply	Research_Survey	Seismic_Vessel
+354915000	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+209108000	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+372698000	disagree	Research_Survey	Research_Survey	Seismic_Vessel
+576497000	Trawler	Trawler	Trawler	Trawler
+227317970	disagree	Longliner	Research_Survey	Trawler
+311000084	disagree	Seismic_Vessel	Research_Survey	Seismic_Vessel
+576496000	Trawler	Trawler	Trawler	Trawler
+533002100	disagree	Tug_Pilot_Supply	Tug_Pilot_Supply	Seismic_Vessel
+412270039	Trawler	Trawler	Trawler	Trawler
+413302640	disagree	not_enough_info	Research_Survey	not_enough_info
+577325000	disagree	not_enough_info	Seismic_Vessel	not_known
+565590000	disagree	Tug_Pilot_Supply	Research_Survey	Tug_Pilot_Supply
+412420958	disagree	Longliner	fishing	Fishing
+503156500	disagree	Tug_Pilot_Supply	bad_data	Tug_Pilot_Supply
+311012400	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel	Seismic_Vessel
+341899000	Trawler	Trawler	Trawler	Trawler
+412420251	disagree	Fishing	fishing vessel	fishing
+377339000	disagree	Cargo_Tanker	Cargo_Tanker	Tug_Pilot_Supply
+355242000	disagree	Seismic_Vessel	Seismic_Vessel	Research_Survey
+677071200	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply	Tug_Pilot_Supply
